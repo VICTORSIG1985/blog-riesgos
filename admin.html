@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Panel de Administración | Blog de Riesgos y Desastres</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="admin">
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="25" cy="25" r="23" fill="none" stroke="#1B998B" stroke-width="2"/>
+                        <circle cx="25" cy="25" r="15" fill="none" stroke="#1B998B" stroke-width="1.5" opacity="0.6"/>
+                        <path d="M25 8 L25 42 M8 25 L42 25" stroke="#1B998B" stroke-width="1" opacity="0.4"/>
+                        <ellipse cx="25" cy="25" rx="8" ry="23" fill="none" stroke="#1B998B" stroke-width="1" opacity="0.4"/>
+                        <path d="M25 5 L22 12 L28 12 Z" fill="#E84855"/>
+                        <circle cx="25" cy="9" r="2" fill="#E84855"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="site-name">Riesgos y Desastres</span>
+                    <span class="site-tagline">Panel de Administración</span>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <button class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="articulos.html">Artículos</a></li>
+                    <li><a href="infografias.html">Infografías</a></li>
+                    <li><a href="videos.html">Videos</a></li>
+                    <li><a href="sobre-mi.html">Sobre Mí</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-header">
+            <h1 class="section-title" id="form-title">Nuevo Artículo</h1>
+            <p class="section-subtitle">Publica y administra artículos del blog. Los campos marcados con * son obligatorios.</p>
+        </div>
+
+        <form id="article-form" class="admin-form" novalidate>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="art-title">Título *</label>
+                    <input type="text" id="art-title" required placeholder="Título del artículo">
+                </div>
+                <div class="form-group">
+                    <label for="art-date">Fecha de publicación *</label>
+                    <input type="date" id="art-date" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="art-summary">Resumen</label>
+                <textarea id="art-summary" rows="3" placeholder="Breve resumen del artículo (aparece en las tarjetas)"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="art-content">Contenido completo *</label>
+                <textarea id="art-content" rows="12" required placeholder="Contenido del artículo. Usa saltos de línea para separar párrafos."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="art-image">URL de imagen</label>
+                    <input type="url" id="art-image" placeholder="https://ejemplo.com/imagen.jpg o ruta local">
+                </div>
+                <div class="form-group">
+                    <label for="art-tags">Etiquetas (separadas por comas)</label>
+                    <input type="text" id="art-tags" placeholder="riesgos, deslizamientos, SIG, Ecuador">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="art-version">Versión</label>
+                    <input type="text" id="art-version" value="v1.0" placeholder="v1.0">
+                </div>
+                <div class="form-group">
+                    <label for="art-source">Fuente *</label>
+                    <input type="text" id="art-source" required placeholder="Fuente principal del artículo">
+                    <span class="required-note">Obligatorio: rigor académico</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="art-references">Referencias bibliográficas (formato APA) *</label>
+                <textarea id="art-references" rows="5" required placeholder="Una referencia por línea en formato APA:&#10;Apellido, N. (Año). Título. Editorial.&#10;Organización. (Año). Título del informe. URL"></textarea>
+                <span class="required-note">Obligatorio: cada artículo debe incluir sus referencias</span>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="cancel-edit" class="btn btn-outline" style="display:none;">Cancelar edición</button>
+                <button type="submit" class="btn btn-primary">Publicar artículo</button>
+            </div>
+        </form>
+
+        <!-- Tools -->
+        <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" onclick="exportArticles()">&#128190; Exportar backup (JSON)</button>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+                &#128194; Importar backup
+                <input type="file" accept=".json" onchange="importArticles(event)" style="display:none;">
+            </label>
+            <a href="#" class="btn btn-outline btn-sm" onclick="downloadRSS()">&#128226; Generar RSS</a>
+        </div>
+
+        <!-- Articles List -->
+        <div class="admin-articles-list">
+            <h2 class="section-title mt-3">Artículos Publicados</h2>
+            <div id="articles-list"></div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024-2026 Víctor Hugo Pinto Páez. Panel de Administración.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
