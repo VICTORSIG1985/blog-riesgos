@@ -101,6 +101,34 @@
         </div>
     </main>
 
+    <!-- Modal de descarga -->
+    <div id="download-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(13,27,42,0.92);align-items:center;justify-content:center;">
+        <div style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius);padding:2rem;width:100%;max-width:440px;margin:1rem;position:relative;">
+            <button id="modal-close" style="position:absolute;top:0.75rem;right:1rem;background:none;border:none;color:var(--color-text-muted);font-size:1.5rem;cursor:pointer;">&times;</button>
+            <h3 style="font-family:var(--font-title);color:var(--color-text-light);margin-bottom:0.25rem;font-size:1.1rem;">Descargar Infografía</h3>
+            <p id="modal-img-name" style="color:var(--color-secondary);font-size:0.85rem;margin-bottom:1.25rem;"></p>
+            <form id="download-form" autocomplete="off">
+                <div style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.8rem;color:var(--color-text-light);margin-bottom:0.25rem;">Nombre completo *</label>
+                    <input type="text" id="dl-name" required placeholder="Tu nombre completo" style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.6rem 0.75rem;color:var(--color-text-light);font-size:0.9rem;">
+                </div>
+                <div style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.8rem;color:var(--color-text-light);margin-bottom:0.25rem;">Email *</label>
+                    <input type="email" id="dl-email" required placeholder="tu@email.com" style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.6rem 0.75rem;color:var(--color-text-light);font-size:0.9rem;">
+                </div>
+                <div style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.8rem;color:var(--color-text-light);margin-bottom:0.25rem;">País *</label>
+                    <input type="text" id="dl-country" required placeholder="País de residencia" style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.6rem 0.75rem;color:var(--color-text-light);font-size:0.9rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.8rem;color:var(--color-text-light);margin-bottom:0.25rem;">Institución (opcional)</label>
+                    <input type="text" id="dl-institution" placeholder="Universidad, organización, etc." style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.6rem 0.75rem;color:var(--color-text-light);font-size:0.9rem;">
+                </div>
+                <button type="submit" style="width:100%;background:var(--color-secondary);color:var(--color-primary);border:none;border-radius:var(--radius);padding:0.7rem;font-family:var(--font-title);font-weight:700;font-size:0.9rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;">Descargar</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
         <button class="lightbox-close" aria-label="Cerrar">&times;</button>
@@ -139,5 +167,83 @@
     </footer>
 
     <script src="js/app.js"></script>
+    <script>
+    (function() {
+        // Agregar botón "Descargar" a cada infographic-card
+        const cards = document.querySelectorAll('.infographic-card');
+        cards.forEach(function(card) {
+            const img = card.querySelector('img');
+            const title = card.querySelector('h3');
+            const btn = document.createElement('button');
+            btn.textContent = 'Descargar';
+            btn.className = 'btn btn-primary';
+            btn.style.cssText = 'margin:0.5rem 1rem 1rem;font-size:0.8rem;padding:0.45rem 1.2rem;';
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openDownloadModal(img.src, title ? title.textContent : 'Infografía');
+            });
+            card.querySelector('.infographic-card-body').appendChild(btn);
+        });
+
+        // Modal
+        const modal = document.getElementById('download-modal');
+        const form = document.getElementById('download-form');
+        const closeBtn = document.getElementById('modal-close');
+        const imgNameEl = document.getElementById('modal-img-name');
+        let currentImgSrc = '';
+        let currentImgTitle = '';
+
+        function openDownloadModal(src, title) {
+            currentImgSrc = src;
+            currentImgTitle = title;
+            imgNameEl.textContent = title;
+            form.reset();
+            modal.style.display = 'flex';
+        }
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('dl-name').value.trim();
+            const email = document.getElementById('dl-email').value.trim();
+            const country = document.getElementById('dl-country').value.trim();
+            const institution = document.getElementById('dl-institution').value.trim();
+
+            if (!name || !email || !country) return;
+
+            // Guardar registro en localStorage
+            const records = JSON.parse(localStorage.getItem('download_records') || '[]');
+            const now = new Date();
+            records.push({
+                nombre: name,
+                email: email,
+                pais: country,
+                institucion: institution || '',
+                imagen: currentImgTitle,
+                fecha: now.toLocaleDateString('es-EC'),
+                hora: now.toLocaleTimeString('es-EC'),
+                timestamp: now.toISOString()
+            });
+            localStorage.setItem('download_records', JSON.stringify(records));
+
+            // Descargar la imagen
+            const a = document.createElement('a');
+            a.href = currentImgSrc;
+            a.download = currentImgTitle.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, '').trim() + '.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            modal.style.display = 'none';
+        });
+    })();
+    </script>
 </body>
 </html>

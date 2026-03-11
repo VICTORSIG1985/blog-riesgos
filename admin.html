@@ -135,6 +135,35 @@
             <h2 class="section-title mt-3">Artículos Publicados</h2>
             <div id="articles-list"></div>
         </div>
+
+        <!-- Base de datos de descargas -->
+        <div style="margin-top:2.5rem;">
+            <h2 class="section-title">Base de datos de descargas</h2>
+            <p class="section-subtitle">Registro de usuarios que descargaron infografías</p>
+            <div style="margin-bottom:1rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+                <button class="btn btn-outline btn-sm" onclick="exportDownloadsCSV()">&#128196; Exportar a CSV</button>
+                <button class="btn btn-outline btn-sm" onclick="clearDownloads()" style="border-color:var(--color-accent);color:var(--color-accent);">&#128465; Limpiar registros</button>
+                <span id="dl-count" style="color:var(--color-text-muted);font-size:0.85rem;"></span>
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="downloads-table" style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                    <thead>
+                        <tr style="background:var(--color-bg-input);color:var(--color-text-light);text-align:left;">
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">#</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Fecha</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Hora</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Nombre</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Email</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">País</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Institución</th>
+                            <th style="padding:0.6rem 0.75rem;font-family:var(--font-title);font-weight:600;border-bottom:2px solid var(--color-border);">Imagen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="downloads-tbody"></tbody>
+                </table>
+            </div>
+            <p id="dl-empty" style="color:var(--color-text-muted);font-size:0.9rem;text-align:center;padding:2rem 0;display:none;">No hay registros de descargas aún.</p>
+        </div>
     </main>
 
     <footer class="site-footer">
@@ -311,5 +340,69 @@
     </script>
     <script src="js/app.js"></script>
     <script src="js/admin.js"></script>
+    <script>
+    // Base de datos de descargas
+    function loadDownloads() {
+        var records = JSON.parse(localStorage.getItem('download_records') || '[]');
+        var tbody = document.getElementById('downloads-tbody');
+        var emptyMsg = document.getElementById('dl-empty');
+        var countEl = document.getElementById('dl-count');
+        tbody.innerHTML = '';
+        countEl.textContent = records.length + ' registro(s)';
+        if (records.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        }
+        emptyMsg.style.display = 'none';
+        var rowStyle = 'padding:0.5rem 0.75rem;border-bottom:1px solid var(--color-border);color:var(--color-text-muted);';
+        records.forEach(function(r, i) {
+            var tr = document.createElement('tr');
+            tr.style.cssText = i % 2 === 0 ? '' : 'background:rgba(255,255,255,0.02);';
+            tr.innerHTML =
+                '<td style="' + rowStyle + '">' + (i + 1) + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.fecha) + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.hora) + '</td>' +
+                '<td style="' + rowStyle + 'color:var(--color-text-light);">' + escapeHTML(r.nombre) + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.email) + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.pais) + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.institucion || '—') + '</td>' +
+                '<td style="' + rowStyle + '">' + escapeHTML(r.imagen) + '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    function escapeHTML(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    function exportDownloadsCSV() {
+        var records = JSON.parse(localStorage.getItem('download_records') || '[]');
+        if (records.length === 0) { alert('No hay registros para exportar.'); return; }
+        var csv = 'Fecha,Hora,Nombre,Email,País,Institución,Imagen\n';
+        records.forEach(function(r) {
+            csv += '"' + r.fecha + '","' + r.hora + '","' + r.nombre.replace(/"/g, '""') + '","' +
+                   r.email.replace(/"/g, '""') + '","' + r.pais.replace(/"/g, '""') + '","' +
+                   (r.institucion || '').replace(/"/g, '""') + '","' + r.imagen.replace(/"/g, '""') + '"\n';
+        });
+        var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'descargas_infografias_' + new Date().toISOString().slice(0, 10) + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function clearDownloads() {
+        if (confirm('¿Estás seguro de eliminar todos los registros de descargas?')) {
+            localStorage.removeItem('download_records');
+            loadDownloads();
+        }
+    }
+
+    loadDownloads();
+    </script>
 </body>
 </html>

@@ -153,6 +153,15 @@
         </div>
     </footer>
 
+    <script>
+    // MEJORA 1: Siempre mostrar la página desde el inicio
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+    // Limpiar cualquier scroll position guardado para esta página
+    sessionStorage.removeItem('scrollPos_index');
+    </script>
     <script src="js/app.js"></script>
 </body>
 </html>
