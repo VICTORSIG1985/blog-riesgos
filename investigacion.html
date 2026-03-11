@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Investigación InSAR sobre deslizamientos en bosque nublado tropical - Evento Intag 2023, Cotacachi, Ecuador">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Investigación InSAR Intag 2023 | Blog de Riesgos y Desastres">
+    <meta property="og:description" content="Detección de desplazamiento superficial por deslizamiento mediante InSAR en bosque nublado tropical">
+    <title>Investigación | Blog de Gestión de Riesgos y Desastres</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* === Investigación page styles === */
+        .research-header {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--color-secondary);
+        }
+        .research-header h1 {
+            font-family: var(--font-title);
+            color: var(--color-text-light);
+            font-size: 1.45rem;
+            line-height: 1.4;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+        .research-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.5rem;
+            font-size: 0.88rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+        .research-meta a { color: var(--color-secondary); }
+        .badge-review {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.15);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            border-radius: 4px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: var(--font-title);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .open-science-note {
+            background: rgba(27, 153, 139, 0.1);
+            border: 1px solid rgba(27, 153, 139, 0.3);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: var(--color-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Maps grid */
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+        .map-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .map-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        .map-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .map-card figcaption {
+            padding: 0.75rem 1rem;
+            font-size: 0.82rem;
+            color: var(--color-text-muted);
+            font-family: var(--font-title);
+            text-align: center;
+        }
+
+        /* Workflow diagram */
+        .workflow {
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+            padding: 1.5rem 0;
+            align-items: stretch;
+        }
+        .workflow-phase {
+            flex: 1;
+            min-width: 155px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 1.1rem 0.9rem;
+            text-align: center;
+            position: relative;
+        }
+        .workflow-phase:not(:last-child)::after {
+            content: '\25B6';
+            position: absolute;
+            right: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-secondary);
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+        .workflow-phase:not(:last-child) {
+            margin-right: 22px;
+        }
+        .phase-num {
+            display: inline-block;
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            font-family: var(--font-title);
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.55rem;
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        .workflow-phase h4 {
+            font-family: var(--font-title);
+            color: var(--color-text-light);
+            font-size: 0.82rem;
+            margin-bottom: 0.3rem;
+        }
+        .workflow-phase p {
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Collapsible phases */
+        .phase-group {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+        .phase-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 0.92rem;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background var(--transition);
+        }
+        .phase-toggle:hover { background: rgba(255,255,255,0.03); }
+        .phase-toggle .arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--color-secondary); }
+        .phase-toggle.active .arrow { transform: rotate(90deg); }
+        .phase-scripts {
+            display: none;
+            padding: 0 1.25rem 1rem;
+        }
+        .phase-scripts.open { display: block; }
+        .script-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.82rem;
+        }
+        .script-item:last-child { border-bottom: none; }
+        .script-num {
+            font-family: var(--font-title);
+            font-weight: 700;
+            color: var(--color-secondary);
+            min-width: 38px;
+        }
+        .script-item a {
+            color: var(--color-text-muted);
+            transition: color var(--transition);
+        }
+        .script-item a:hover { color: var(--color-secondary); }
+
+        /* Tech badges */
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .tech-badge {
+            background: var(--color-bg-input);
+            color: var(--color-text-light);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 0.35rem 0.9rem;
+            font-family: var(--font-title);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* Citation box */
+        .citation-box {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-secondary);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.88rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .copy-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: var(--radius);
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .copy-toast.show { opacity: 1; }
+
+        /* Lightbox research */
+        .research-lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(13,27,42,0.95);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+        .research-lightbox.active { display: flex; }
+        .research-lightbox img {
+            max-width: 92vw;
+            max-height: 90vh;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        @media (max-width: 768px) {
+            .research-header { padding: 1.5rem 1.25rem; }
+            .research-header h1 { font-size: 1.15rem; }
+            .workflow { flex-direction: column; gap: 0.75rem; }
+            .workflow-phase:not(:last-child) { margin-right: 0; margin-bottom: 0; }
+            .workflow-phase:not(:last-child)::after {
+                content: '\25BC';
+                right: 50%;
+                top: auto;
+                bottom: -16px;
+                transform: translateX(50%);
+            }
+            .map-card img { height: 180px; }
+        }
+    </style>
+</head>
+<body data-page="research">
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Logo Riesgos y Desastres" class="logo-icon" style="height:55px;width:auto;display:block;" loading="eager">
+                <div class="logo-text">
+                    <span class="site-name">Riesgos y Desastres</span>
+                    <span class="site-tagline">Ciencia &middot; Territorio &middot; Prevención</span>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <button class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="articulos.html">Artículos</a></li>
+                    <li><a href="infografias.html">Infografías</a></li>
+                    <li><a href="videos.html">Videos</a></li>
+                    <li><a href="investigacion.html" class="active">Investigación</a></li>
+                    <li><a href="sobre-mi.html">Sobre Mí</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- SECCIÓN 1: Encabezado científico -->
+        <section class="section">
+            <div class="research-header">
+                <h1>InSAR-based detection of landslide-induced surface displacement in tropical cloud forest: the December 2023 Intag event, Cotacachi, Ecuador</h1>
+                <div class="research-meta">
+                    <span><strong>Autor:</strong> Víctor Hugo Pinto Páez</span>
+                    <span><strong>ORCID:</strong> <a href="https://orcid.org/0009-0001-5573-8294" target="_blank" rel="noopener">0009-0001-5573-8294</a></span>
+                    <span><strong>Estado:</strong> <span class="badge-review">Under peer review</span></span>
+                    <span><strong>Año:</strong> 2026</span>
+                </div>
+                <div class="research-meta">
+                    <span><strong>Repositorio:</strong> <a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023" target="_blank" rel="noopener">github.com/VICTORSIG1985/insar-intag-landslide-2023</a></span>
+                </div>
+                <div class="open-science-note">
+                    Código disponible bajo principios de ciencia abierta y reproducibilidad.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: Área de estudio -->
+        <section class="section">
+            <h2 class="section-title">Área de Estudio</h2>
+            <p class="section-subtitle">Zona de Intag, cantón Cotacachi, Ecuador — Deslizamiento de diciembre 2023</p>
+            <div class="maps-grid">
+                <figure class="map-card" onclick="openResearchLightbox(this)">
+                    <img src="MAPA_SATELITAL_POR_PARROQUIA.png" alt="Mapa satelital por parroquia de la zona de Intag" loading="lazy">
+                    <figcaption>Mapa satelital por parroquia — Zona de Intag, Cotacachi</figcaption>
+                </figure>
+                <figure class="map-card" onclick="openResearchLightbox(this)">
+                    <img src="MAPA_SATELITAL_SUSCEPTIBILIDAD.png" alt="Mapa de susceptibilidad a deslizamientos" loading="lazy">
+                    <figcaption>Susceptibilidad a deslizamientos — Modelo Random Forest</figcaption>
+                </figure>
+                <figure class="map-card" onclick="openResearchLightbox(this)">
+                    <img src="MAPA_SATELITAL_ZONAS_CRITICAS.png" alt="Mapa de zonas críticas identificadas" loading="lazy">
+                    <figcaption>Zonas críticas identificadas — Análisis InSAR + óptico</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: Flujo de trabajo -->
+        <section class="section">
+            <h2 class="section-title">Flujo de Trabajo</h2>
+            <p class="section-subtitle">Pipeline de procesamiento en 6 fases secuenciales</p>
+            <div class="workflow">
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 1</span>
+                    <h4>Datos Sentinel-1</h4>
+                    <p>P02 – P04</p>
+                </div>
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 2</span>
+                    <h4>Procesamiento DInSAR</h4>
+                    <p>P05 – P06</p>
+                </div>
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 3</span>
+                    <h4>Validación óptica</h4>
+                    <p>Sentinel-2 / GEE (P07)</p>
+                </div>
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 4</span>
+                    <h4>Análisis SBAS</h4>
+                    <p>MintPy (P08 – P10)</p>
+                </div>
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 5</span>
+                    <h4>Variables morfométricas</h4>
+                    <p>P13 – P16</p>
+                </div>
+                <div class="workflow-phase">
+                    <span class="phase-num">Fase 6</span>
+                    <h4>Modelo &amp; Figuras</h4>
+                    <p>P17 – P21</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: Scripts por fase -->
+        <section class="section">
+            <h2 class="section-title">Scripts del Proyecto</h2>
+            <p class="section-subtitle">39 scripts organizados por fase — clic para expandir</p>
+
+            <!-- Configuración -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Configuración y entorno (3 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P00</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/00%20CONFIGURACI%C3%93N%20CENTRAL%20DEL%20PROYECTO%20InSAR%20-%20INTAG.py" target="_blank" rel="noopener">Configuración central del proyecto InSAR - Intag</a></div>
+                    <div class="script-item"><span class="script-num">P00</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P00%20%20VERIFICACI%C3%93N%20DEL%20ENTORNO%20DE%20TRABAJO.py" target="_blank" rel="noopener">Verificación del entorno de trabajo</a></div>
+                    <div class="script-item"><span class="script-num">P01</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P01%20VERIFICACI%C3%93N%20DEL%20ENTORNO.py" target="_blank" rel="noopener">Verificación del entorno</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 1 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 1: Datos Sentinel-1 — P02 a P04 (4 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P02</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P02%20-%20B%C3%9ASQUEDA%20SENTINEL-1%20SLC%20(BBOX%20DESDE%20GPKG%20REAL).py" target="_blank" rel="noopener">Búsqueda Sentinel-1 SLC (BBOX desde GPKG real)</a></div>
+                    <div class="script-item"><span class="script-num">P03</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P03%20-%20SELECCI%C3%93N%20DE%20PARES%20ESTRAT%C3%89GICOS%20DInSAR.py" target="_blank" rel="noopener">Selección de pares estratégicos DInSAR</a></div>
+                    <div class="script-item"><span class="script-num">P04</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P04%20%20ENV%C3%8DO%20DE%208%20PARES%20A%20HyP3%20PARA%20PROCESAMIENTO%20InSAR.py" target="_blank" rel="noopener">Envío de 8 pares a HyP3 para procesamiento InSAR</a></div>
+                    <div class="script-item"><span class="script-num">P04b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P04b_v2%20-%20PATH%2018%20SELECCI%C3%93N%2C%20ENV%C3%8DO%2C%20ESPERA%20Y%20DESCARGA.py" target="_blank" rel="noopener">Path 18: selección, envío, espera y descarga</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 2 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 2: Procesamiento DInSAR — P05 a P06 (5 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P05</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P05%20v2.0%20%E2%80%94%20EXTRACCI%C3%93N%2C%20RECORTE%20Y%20AN%C3%81LISIS%20InSAR%20(CORREGIDO).py" target="_blank" rel="noopener">Extracción, recorte y análisis InSAR</a></div>
+                    <div class="script-item"><span class="script-num">P05b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P05b%20v2.0%20-%20FUSI%C3%93N%20ASCENDENTE%20Path%20120%20%2B%20Path%2018.py" target="_blank" rel="noopener">Fusión ascendente Path 120 + Path 18</a></div>
+                    <div class="script-item"><span class="script-num">P05c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P05c%20%E2%80%94%20RENOMBRAR%20ARCHIVOS%20CLIPPED%20PARA%20COMPATIBILIDAD%20CON%20P06.py" target="_blank" rel="noopener">Renombrar archivos clipped para compatibilidad con P06</a></div>
+                    <div class="script-item"><span class="script-num">P06</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P06%20v2.0%20%E2%80%94%20EXTRACCION%20DE%20ZONAS%20DE%20DEFORMACION.py" target="_blank" rel="noopener">Extracción de zonas de deformación</a></div>
+                    <div class="script-item"><span class="script-num">P06b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P06b_VERIFICACION%20%E2%80%94%20VERIFICACION%20CIENTIFICA%20INTEGRAL%20DE%20CLUSTERES%20InSAR.py" target="_blank" rel="noopener">Verificación científica integral de clusteres InSAR</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 3 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 3: Validación óptica Sentinel-2 / GEE — P07 (6 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P07</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07%20%E2%80%94%20VALIDACI%C3%93N%20%C3%93PTICA%20CON%20SENTINEL-2%20(Google%20Earth%20Engine).txt" target="_blank" rel="noopener">Validación óptica con Sentinel-2 (Google Earth Engine)</a></div>
+                    <div class="script-item"><span class="script-num">P07b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07b%20%E2%80%94%20VALIDACI%C3%93N%20CRUZADA%20InSAR%20vs.%20%C3%93PTICO%20(Sentinel-2).py" target="_blank" rel="noopener">Validación cruzada InSAR vs. óptico (Sentinel-2)</a></div>
+                    <div class="script-item"><span class="script-num">P07c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07c%20%E2%80%94%20INVENTARIO%20%C3%93PTICO%20INDEPENDIENTE%20DE%20DESLIZAMIENTOS%20(Fase%201).py" target="_blank" rel="noopener">Inventario óptico independiente de deslizamientos (Fase 1)</a></div>
+                    <div class="script-item"><span class="script-num">P07c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07c_auxiliar%20%E2%80%94%20EXPORTACI%C3%93N%20DE%20CAPAS%20AUXILIARES%20PARA%20INVENTARIO%20%C3%93PTICO.txt" target="_blank" rel="noopener">Exportación de capas auxiliares para inventario óptico</a></div>
+                    <div class="script-item"><span class="script-num">P07c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07c_auxiliar2%20%E2%80%94%20EXPORTACI%C3%93N%20DE%20CAPAS%20AUXILIARES%20PARA%20INVENTARIO%20%C3%93PTICO.txt" target="_blank" rel="noopener">Exportación de capas auxiliares (2)</a></div>
+                    <div class="script-item"><span class="script-num">P07d</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P07d%20%E2%80%94%20CRUCE%20ESPACIAL%20DE%20INVENTARIOS%20InSAR%20Y%20%C3%93PTICO%20(Paso%201.3).py" target="_blank" rel="noopener">Cruce espacial de inventarios InSAR y óptico</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 4 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 4: Análisis SBAS + MintPy — P08 a P10 (7 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P08</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P08%20%E2%80%94%20VERIFICACI%C3%93N%20DE%20COBERTURA%20SENTINEL-1%20PARA%20FASE%203%20SBAS.py" target="_blank" rel="noopener">Verificación de cobertura Sentinel-1 para Fase 3 SBAS</a></div>
+                    <div class="script-item"><span class="script-num">P09</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09%20%E2%80%94%20DISE%C3%91O%20Y%20ENV%C3%8DO%20DEL%20STACK%20SBAS%20A%20HyP3.py" target="_blank" rel="noopener">Diseño y envío del stack SBAS a HyP3</a></div>
+                    <div class="script-item"><span class="script-num">P09b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09b%20%E2%80%94%20DIAGN%C3%93STICO%20DE%20ENV%C3%8DO%20SBAS%20ENVIADOS%20vs%20PENDIENTES.py" target="_blank" rel="noopener">Diagnóstico de envío SBAS: enviados vs pendientes</a></div>
+                    <div class="script-item"><span class="script-num">P09c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09c%20%E2%80%94%20ENV%C3%8DO%20DE%20372%20PARES%20PENDIENTES%20SBAS%20(CUENTA%202).py" target="_blank" rel="noopener">Envío de 372 pares pendientes SBAS (cuenta 2)</a></div>
+                    <div class="script-item"><span class="script-num">P09d</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09d%20%E2%80%94%20MONITOREO%20DE%20PROCESAMIENTO%20SBAS%20(AMBAS%20CUENTAS).py" target="_blank" rel="noopener">Monitoreo de procesamiento SBAS (ambas cuentas)</a></div>
+                    <div class="script-item"><span class="script-num">P09e</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09e%20%E2%80%94%20DESCARGA%20DE%20PRODUCTOS%20SBAS%20COMPLETADOS%20(CUENTA%201).py" target="_blank" rel="noopener">Descarga de productos SBAS completados (cuenta 1)</a></div>
+                    <div class="script-item"><span class="script-num">P09f</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P09f%20%E2%80%94%20DESCARGA%20DE%20PRODUCTOS%20SBAS%20FALTANTES%20(CUENTA%202).py" target="_blank" rel="noopener">Descarga de productos SBAS faltantes (cuenta 2)</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 4b NISAR -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Análisis comparativo NISAR — P11 a P12 (3 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P11</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P11%20--%20VERIFICACION%20DE%20DISPONIBILIDAD%20DE%20DATOS%20NISAR%20PARA%20INTAG.py" target="_blank" rel="noopener">Verificación de disponibilidad de datos NISAR para Intag</a></div>
+                    <div class="script-item"><span class="script-num">P12</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P12%20--%20DESCARGA%20Y%20ANALISIS%20DE%20COHERENCIA%20NISAR%20L-BAND%20vs%20SENTINEL-1%20C-BAND.py" target="_blank" rel="noopener">Descarga y análisis de coherencia NISAR L-Band vs Sentinel-1 C-Band</a></div>
+                    <div class="script-item"><span class="script-num">P12b</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P12b%20--%20FIGURAS%20COMPARATIVAS%20COHERENCIA%20C-BAND%20vs%20L-BAND.py" target="_blank" rel="noopener">Figuras comparativas coherencia C-Band vs L-Band</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 5 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 5: Variables morfométricas y ambientales — P13 a P16 (5 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P10</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P10%20%E2%80%94%20EXTRACCI%C3%93N%20Y%20PREPARACI%C3%93N%20DE%20PRODUCTOS%20SBAS%20PARA%20MintPy.py" target="_blank" rel="noopener">Extracción y preparación de productos SBAS para MintPy</a></div>
+                    <div class="script-item"><span class="script-num">P13</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P13%20--%20VARIABLES%20MORFOMETRICAS%20DEL%20DEM%20(FASE%205%2C%20PASO%205.1).py" target="_blank" rel="noopener">Variables morfométricas del DEM (Paso 5.1)</a></div>
+                    <div class="script-item"><span class="script-num">P14</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P14%20--%20ANALISIS%20DE%20PRECIPITACION%20COMO%20DISPARADOR%20(FASE%205%2C%20PASO%205.2).py" target="_blank" rel="noopener">Análisis de precipitación como disparador (Paso 5.2)</a></div>
+                    <div class="script-item"><span class="script-num">P15</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P15%20--%20ANALISIS%20DE%20COBERTURA%20DEL%20SUELO%20(FASE%205%2C%20PASO%205.3).py" target="_blank" rel="noopener">Análisis de cobertura del suelo (Paso 5.3)</a></div>
+                    <div class="script-item"><span class="script-num">P15</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P15%20--%20ANALISIS%20DE%20HUMEDAD%20DEL%20SUELO%20(FASE%205%2C%20PASO%205.3).py" target="_blank" rel="noopener">Análisis de humedad del suelo (Paso 5.3)</a></div>
+                </div>
+            </div>
+
+            <!-- Fase 6 -->
+            <div class="phase-group">
+                <button class="phase-toggle" onclick="togglePhase(this)">
+                    Fase 6: Modelo de susceptibilidad y figuras — P16 a P21 (5 scripts) <span class="arrow">&#9654;</span>
+                </button>
+                <div class="phase-scripts">
+                    <div class="script-item"><span class="script-num">P16</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P16%20--%20COBERTURA%20Y%20USO%20DEL%20SUELO%20(FASE%205%2C%20PASO%205.4).py" target="_blank" rel="noopener">Cobertura y uso del suelo (Paso 5.4)</a></div>
+                    <div class="script-item"><span class="script-num">P17</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P17%20--%20MODELO%20DE%20SUSCEPTIBILIDAD%20A%20DESLIZAMIENTOS%20(FASE%205%2C%20PASO%205.5).py" target="_blank" rel="noopener">Modelo de susceptibilidad a deslizamientos (Paso 5.5)</a></div>
+                    <div class="script-item"><span class="script-num">P18</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P18%20--%20RECORTE%20AL%20AOI%20REAL%20Y%20FIGURAS%20PARA%20PUBLICACION.py" target="_blank" rel="noopener">Recorte al AOI real y figuras para publicación</a></div>
+                    <div class="script-item"><span class="script-num">P19</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P19%20--%20REGENERACION%20DE%20TODAS%20LAS%20FIGURAS%20CON%20AOI%20CORRECTO.py" target="_blank" rel="noopener">Regeneración de todas las figuras con AOI correcto</a></div>
+                    <div class="script-item"><span class="script-num">P20c</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P20c%20--%20MAPA%20DE%20SUSCEPTIBILIDAD%20SOBRE%20OpenStreetMap.py" target="_blank" rel="noopener">Mapa de susceptibilidad sobre OpenStreetMap</a></div>
+                    <div class="script-item"><span class="script-num">P21</span><a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023/blob/main/P21%20--%20FIGURAS%20DEFINITIVAS%20DEL%20ARTICULO%20ESRJ%20(7%20FIGURAS%20EN%20INGLES).py" target="_blank" rel="noopener">Figuras definitivas del artículo ESRJ (7 figuras en inglés)</a></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="https://github.com/VICTORSIG1985/insar-intag-landslide-2023" target="_blank" rel="noopener" class="btn btn-primary">Ver repositorio completo en GitHub &rarr;</a>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: Tecnologías -->
+        <section class="section">
+            <h2 class="section-title">Tecnologías Utilizadas</h2>
+            <div class="tech-badges">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Sentinel-1</span>
+                <span class="tech-badge">Sentinel-2</span>
+                <span class="tech-badge">InSAR</span>
+                <span class="tech-badge">SBAS</span>
+                <span class="tech-badge">HyP3</span>
+                <span class="tech-badge">MintPy</span>
+                <span class="tech-badge">Google Earth Engine</span>
+                <span class="tech-badge">NISAR</span>
+                <span class="tech-badge">Random Forest</span>
+                <span class="tech-badge">ArcGIS</span>
+                <span class="tech-badge">QGIS</span>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 6: Cita provisional -->
+        <section class="section">
+            <h2 class="section-title">Cita Provisional</h2>
+            <div class="citation-box" id="citation-text">
+                Pinto Páez, V.H. (under review). InSAR-based detection of landslide-induced surface displacement in tropical cloud forest: the December 2023 Intag event, Cotacachi, Ecuador.
+            </div>
+            <div style="margin-top:0.75rem;">
+                <button class="btn btn-outline btn-sm" onclick="copyCitation()">Copiar cita</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Lightbox para mapas -->
+    <div class="research-lightbox" id="research-lightbox" onclick="closeResearchLightbox()">
+        <img src="" alt="Mapa ampliado">
+    </div>
+
+    <!-- Toast -->
+    <div class="copy-toast" id="copy-toast">Cita copiada al portapapeles</div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>Navegación</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="articulos.html">Artículos</a></li>
+                        <li><a href="infografias.html">Infografías</a></li>
+                        <li><a href="videos.html">Videos</a></li>
+                        <li><a href="investigacion.html">Investigación</a></li>
+                        <li><a href="sobre-mi.html">Sobre Mí</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Conecta</h4>
+                    <ul>
+                        <li><a href="https://www.linkedin.com/in/víctor-hugo-pinto-páez-701a71363" target="_blank" rel="noopener">LinkedIn</a></li>
+                        <li><a href="https://github.com/VICTORSIG1985" target="_blank" rel="noopener">GitHub</a></li>
+                        <li><a href="https://orcid.org/0009-0001-5573-8294" target="_blank" rel="noopener">ORCID</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024-2026 Víctor Hugo Pinto Páez. Blog de Gestión de Riesgos y Desastres.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+    // Toggle collapsible phases
+    function togglePhase(btn) {
+        btn.classList.toggle('active');
+        var scripts = btn.nextElementSibling;
+        scripts.classList.toggle('open');
+    }
+
+    // Lightbox for maps
+    function openResearchLightbox(card) {
+        var img = card.querySelector('img');
+        var lb = document.getElementById('research-lightbox');
+        lb.querySelector('img').src = img.src;
+        lb.classList.add('active');
+    }
+    function closeResearchLightbox() {
+        document.getElementById('research-lightbox').classList.remove('active');
+    }
+
+    // Copy citation
+    function copyCitation() {
+        var text = document.getElementById('citation-text').textContent.trim();
+        navigator.clipboard.writeText(text).then(function() {
+            var toast = document.getElementById('copy-toast');
+            toast.classList.add('show');
+            setTimeout(function() { toast.classList.remove('show'); }, 2000);
+        });
+    }
+    </script>
+</body>
+</html>
