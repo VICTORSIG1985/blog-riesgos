@@ -9,6 +9,29 @@
 </head>
 <body data-page="admin">
 
+    <!-- Login Screen -->
+    <div id="login-screen" style="display:flex;position:fixed;inset:0;z-index:9999;background:var(--color-primary);align-items:center;justify-content:center;">
+        <div style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:400px;margin:1rem;">
+            <div style="text-align:center;margin-bottom:1.5rem;">
+                <img src="logo.png" alt="Logo" style="height:60px;width:auto;margin:0 auto 1rem;" loading="eager">
+                <h2 style="font-family:var(--font-title);color:var(--color-text-light);font-size:1.3rem;">Panel de Administración</h2>
+                <p style="color:var(--color-text-muted);font-size:0.85rem;">Ingresa tus credenciales para continuar</p>
+            </div>
+            <form id="login-form" autocomplete="off">
+                <div style="margin-bottom:1rem;">
+                    <label for="login-user" style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.85rem;color:var(--color-text-light);margin-bottom:0.35rem;">Usuario</label>
+                    <input type="text" id="login-user" required placeholder="Usuario" style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.75rem 1rem;color:var(--color-text-light);font-size:0.95rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label for="login-pass" style="display:block;font-family:var(--font-title);font-weight:600;font-size:0.85rem;color:var(--color-text-light);margin-bottom:0.35rem;">Contraseña</label>
+                    <input type="password" id="login-pass" required placeholder="Contraseña" style="width:100%;background:var(--color-bg-input);border:1px solid var(--color-border);border-radius:var(--radius);padding:0.75rem 1rem;color:var(--color-text-light);font-size:0.95rem;">
+                </div>
+                <div id="login-error" style="display:none;background:rgba(232,72,85,0.15);border:1px solid var(--color-accent);color:var(--color-accent);padding:0.6rem 1rem;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1rem;"></div>
+                <button type="submit" id="login-btn" style="width:100%;background:var(--color-secondary);color:var(--color-primary);border:none;border-radius:var(--radius);padding:0.75rem;font-family:var(--font-title);font-weight:700;font-size:0.95rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;">Iniciar sesión</button>
+            </form>
+        </div>
+    </div>
+
     <header class="site-header">
         <div class="header-container">
             <a href="index.html" class="logo">
@@ -122,6 +145,170 @@
         </div>
     </footer>
 
+    <script>
+    (function() {
+        const SESSION_KEY = 'admin_session';
+        const LOCKOUT_KEY = 'admin_lockout';
+        const ATTEMPTS_KEY = 'admin_attempts';
+        const SESSION_HOURS = 8;
+        const MAX_ATTEMPTS = 3;
+        const LOCKOUT_MINUTES = 5;
+
+        // Credentials hash (SHA-256 of "victor:RiesgosGeo2026!")
+        const VALID_HASH = '9db77a10a7abb08fa75d4d3a6faebc46bbf9191f277b35c3370bf26441e98430';
+
+        const loginScreen = document.getElementById('login-screen');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const loginBtn = document.getElementById('login-btn');
+        const userInput = document.getElementById('login-user');
+        const passInput = document.getElementById('login-pass');
+
+        async function hashCredentials(user, pass) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(user + ':' + pass);
+            const buffer = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function checkSession() {
+            try {
+                const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+                if (session && session.expires > Date.now()) {
+                    return true;
+                }
+                localStorage.removeItem(SESSION_KEY);
+            } catch {}
+            return false;
+        }
+
+        function createSession() {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({
+                expires: Date.now() + SESSION_HOURS * 60 * 60 * 1000
+            }));
+        }
+
+        function isLockedOut() {
+            try {
+                const lockout = JSON.parse(localStorage.getItem(LOCKOUT_KEY));
+                if (lockout && lockout.until > Date.now()) {
+                    return lockout.until;
+                }
+                localStorage.removeItem(LOCKOUT_KEY);
+                localStorage.removeItem(ATTEMPTS_KEY);
+            } catch {}
+            return false;
+        }
+
+        function getAttempts() {
+            return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0', 10);
+        }
+
+        function showError(msg) {
+            loginError.textContent = msg;
+            loginError.style.display = 'block';
+        }
+
+        function hideError() {
+            loginError.style.display = 'none';
+        }
+
+        function showPanel() {
+            loginScreen.style.display = 'none';
+        }
+
+        function updateLockoutUI(until) {
+            const remaining = Math.ceil((until - Date.now()) / 1000);
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            showError(`Demasiados intentos fallidos. Bloqueado por ${mins}:${secs.toString().padStart(2, '0')} minutos.`);
+            loginBtn.disabled = true;
+            loginBtn.style.opacity = '0.5';
+            userInput.disabled = true;
+            passInput.disabled = true;
+        }
+
+        function unlockUI() {
+            loginBtn.disabled = false;
+            loginBtn.style.opacity = '1';
+            userInput.disabled = false;
+            passInput.disabled = false;
+            hideError();
+        }
+
+        // Check existing session
+        if (checkSession()) {
+            showPanel();
+        } else {
+            // Check lockout
+            const lockedUntil = isLockedOut();
+            if (lockedUntil) {
+                updateLockoutUI(lockedUntil);
+                const ticker = setInterval(() => {
+                    if (Date.now() >= lockedUntil) {
+                        clearInterval(ticker);
+                        localStorage.removeItem(LOCKOUT_KEY);
+                        localStorage.removeItem(ATTEMPTS_KEY);
+                        unlockUI();
+                    } else {
+                        updateLockoutUI(lockedUntil);
+                    }
+                }, 1000);
+            }
+        }
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideError();
+
+            const lockedUntil = isLockedOut();
+            if (lockedUntil) {
+                updateLockoutUI(lockedUntil);
+                return;
+            }
+
+            const user = userInput.value.trim();
+            const pass = passInput.value;
+
+            if (!user || !pass) {
+                showError('Completa todos los campos.');
+                return;
+            }
+
+            const hash = await hashCredentials(user, pass);
+
+            if (hash === VALID_HASH) {
+                localStorage.removeItem(ATTEMPTS_KEY);
+                createSession();
+                showPanel();
+            } else {
+                const attempts = getAttempts() + 1;
+                localStorage.setItem(ATTEMPTS_KEY, attempts.toString());
+
+                if (attempts >= MAX_ATTEMPTS) {
+                    const until = Date.now() + LOCKOUT_MINUTES * 60 * 1000;
+                    localStorage.setItem(LOCKOUT_KEY, JSON.stringify({ until }));
+                    updateLockoutUI(until);
+                    const ticker = setInterval(() => {
+                        if (Date.now() >= until) {
+                            clearInterval(ticker);
+                            localStorage.removeItem(LOCKOUT_KEY);
+                            localStorage.removeItem(ATTEMPTS_KEY);
+                            unlockUI();
+                        } else {
+                            updateLockoutUI(until);
+                        }
+                    }, 1000);
+                } else {
+                    showError(`Credenciales incorrectas. Intento ${attempts} de ${MAX_ATTEMPTS}.`);
+                }
+
+                passInput.value = '';
+                passInput.focus();
+            }
+        });
+    })();
+    </script>
     <script src="js/app.js"></script>
     <script src="js/admin.js"></script>
 </body>
