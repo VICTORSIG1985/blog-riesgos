@@ -21,24 +21,52 @@
         .panel-header{padding:1rem 1.2rem;border-bottom:1px solid var(--color-border);background:#161b22}
         .panel-header h2{color:var(--color-text-light);font-family:'Montserrat',sans-serif;font-size:.95rem;margin:0 0 .75rem 0;display:flex;align-items:center;gap:.5rem}
         .panel-header h2 span{color:var(--color-secondary)}
+        /* Search */
+        .search-container{position:relative;margin-bottom:.6rem}
+        .search-input{width:100%;box-sizing:border-box;background:#0d1117;color:var(--color-text-light);border:1px solid var(--color-border);padding:.55rem .6rem .55rem 2.2rem;border-radius:6px;font-size:.82rem;font-family:'Open Sans',sans-serif}
+        .search-input:focus{outline:none;border-color:var(--color-secondary)}
+        .search-input::placeholder{color:#555}
+        .search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:#555;pointer-events:none}
+        .search-clear{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#555;cursor:pointer;font-size:1.1rem;display:none;padding:0 .2rem;line-height:1}
+        .search-clear:hover{color:var(--color-text-light)}
+        .search-results{position:absolute;top:100%;left:0;right:0;background:#161b22;border:1px solid var(--color-border);border-top:none;border-radius:0 0 6px 6px;max-height:320px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+        .search-result-item{padding:.5rem .7rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;display:flex;justify-content:space-between;align-items:center}
+        .search-result-item:hover,.search-result-item.hl{background:rgba(27,153,139,.15)}
+        .search-result-info{flex:1;min-width:0}
+        .search-result-name{color:var(--color-text-light);font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .search-result-loc{color:#666;font-size:.68rem;margin-top:.1rem}
+        .search-result-badge{font-size:.6rem;font-weight:700;padding:.15rem .4rem;border-radius:8px;flex-shrink:0;margin-left:.5rem}
+        /* Selectors */
         .selector-group{display:flex;flex-direction:column;gap:.4rem}
-        .selector-group select{background:var(--color-bg-input);color:var(--color-text-light);border:1px solid var(--color-border);padding:.45rem .6rem;border-radius:6px;font-size:.8rem;font-family:'Open Sans',sans-serif;width:100%}
+        .selector-group select{background:#0d1117;color:var(--color-text-light);border:1px solid var(--color-border);padding:.45rem .6rem;border-radius:6px;font-size:.8rem;font-family:'Open Sans',sans-serif;width:100%}
         .selector-group select:focus{outline:none;border-color:var(--color-secondary)}
-        .btn-reset{width:100%;margin-top:.5rem;padding:.45rem;background:transparent;color:var(--color-secondary);border:1px solid var(--color-secondary);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .3s}
+        /* Buttons */
+        .btn-group{display:flex;gap:.4rem;margin-top:.6rem}
+        .btn-reset,.btn-all{flex:1;padding:.45rem .4rem;background:transparent;border:1px solid var(--color-secondary);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .3s;text-align:center}
+        .btn-reset{color:var(--color-secondary)}
         .btn-reset:hover{background:var(--color-secondary);color:#fff}
+        .btn-all{color:#888;border-color:#555}
+        .btn-all:hover{border-color:var(--color-secondary);color:var(--color-secondary)}
+        .btn-all:disabled{opacity:.4;cursor:not-allowed}
+        .btn-all.active{background:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}
+        /* Progress */
+        .progress-container{margin-top:.5rem;display:none}
+        .progress-text{font-size:.7rem;color:#666;margin-bottom:.25rem;display:flex;justify-content:space-between}
+        .progress-track{width:100%;height:5px;background:#1b2838;border-radius:3px;overflow:hidden}
+        .progress-fill{height:100%;background:var(--color-secondary);border-radius:3px;transition:width .3s;width:0%}
         /* Panel body */
         .panel-body{flex:1;padding:1rem 1.2rem;overflow-y:auto}
-        .panel-placeholder{color:var(--color-text-muted);text-align:center;padding:3rem 1rem;font-size:.82rem;line-height:1.7}
+        .panel-placeholder{color:#666;text-align:center;padding:3rem 1rem;font-size:.82rem;line-height:1.7}
         .panel-placeholder svg{display:block;margin:0 auto 1rem;opacity:.35}
         .panel-nodata{color:#888;text-align:center;padding:2rem 1rem;font-size:.82rem;background:rgba(85,85,85,.1);border-radius:8px;border:1px dashed #555;margin-top:1rem}
         /* Info sections */
         .info-section{margin-bottom:1.1rem}
         .info-section-title{color:var(--color-secondary);font-family:'Montserrat',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.45rem;padding-bottom:.25rem;border-bottom:1px solid rgba(27,153,139,.2)}
         .info-row{display:flex;justify-content:space-between;padding:.25rem 0;font-size:.78rem}
-        .info-label{color:var(--color-text-muted)}
+        .info-label{color:#888}
         .info-value{color:var(--color-text-light);font-weight:600;text-align:right;max-width:55%}
         .parroquia-name{color:var(--color-text-light);font-family:'Montserrat',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 .1rem 0}
-        .parroquia-loc{color:var(--color-text-muted);font-size:.76rem;margin:0 0 .7rem 0}
+        .parroquia-loc{color:#888;font-size:.76rem;margin:0 0 .7rem 0}
         /* Riesgo badge & gauge */
         .riesgo-badge{display:inline-block;padding:.2rem .6rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
         .riesgo-badge.muy-alto{background:rgba(220,38,38,.2);color:#ef4444}
@@ -50,7 +78,7 @@
         .riesgo-gauge-fill{height:100%;border-radius:4px;transition:width .5s ease}
         /* Event bars */
         .evento-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem;font-size:.73rem}
-        .evento-bar-label{width:105px;color:var(--color-text-muted);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .evento-bar-label{width:105px;color:#888;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .evento-bar-track{flex:1;height:5px;background:#1b2838;border-radius:3px;overflow:hidden}
         .evento-bar-fill{height:100%;background:var(--color-secondary);border-radius:3px;transition:width .4s ease}
         .evento-bar-count{width:28px;text-align:right;color:var(--color-text-light);font-weight:600}
@@ -59,14 +87,16 @@
         .btn-pdf:hover{background:#15877a}
         .btn-pdf:disabled{opacity:.4;cursor:not-allowed}
         /* Legend */
-        .map-legend{background:rgba(13,17,23,.92);padding:.7rem .9rem;border-radius:8px;border:1px solid var(--color-border);font-size:.72rem;line-height:1.9;color:var(--color-text-muted);backdrop-filter:blur(4px)}
+        .map-legend{background:rgba(13,17,23,.92);padding:.7rem .9rem;border-radius:8px;border:1px solid var(--color-border);font-size:.72rem;line-height:1.9;color:#888;backdrop-filter:blur(4px)}
         .map-legend h4{margin:0 0 .3rem 0;color:var(--color-text-light);font-family:'Montserrat',sans-serif;font-size:.72rem}
         .map-legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:5px;vertical-align:middle}
         /* Loading */
-        .map-loading{position:absolute;top:50%;left:calc(50% - 200px);transform:translate(-50%,-50%);z-index:1000;color:var(--color-text-light);font-family:'Montserrat',sans-serif;text-align:center;background:rgba(13,17,23,.93);padding:2rem 2.5rem;border-radius:12px;border:1px solid var(--color-border)}
+        .map-loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;color:var(--color-text-light);font-family:'Montserrat',sans-serif;text-align:center;background:rgba(13,17,23,.95);padding:2rem 2.5rem;border-radius:12px;border:1px solid var(--color-border)}
         .spinner{width:36px;height:36px;border:3px solid var(--color-border);border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .8rem}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .load-status{font-size:.78rem;color:var(--color-text-muted);margin-top:.4rem}
+        .load-status{font-size:.78rem;color:#666;margin-top:.4rem}
+        /* Map message */
+        .map-message{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:800;background:rgba(13,17,23,.92);color:var(--color-text-light);padding:.4rem .9rem;border-radius:6px;font-size:.75rem;border:1px solid var(--color-border);pointer-events:none;display:none;font-family:'Open Sans',sans-serif}
         /* Leaflet overrides */
         .leaflet-container{background:#0d1117}
         .leaflet-popup-content-wrapper{background:#161b22;color:var(--color-text-light);border-radius:8px;border:1px solid var(--color-border)}
@@ -75,7 +105,7 @@
         .leaflet-control-zoom a{background:#161b22!important;color:var(--color-text-light)!important;border-color:var(--color-border)!important}
         .leaflet-control-zoom a:hover{background:#1b2838!important}
         .leaflet-control-layers{background:#161b22!important;color:var(--color-text-light)!important;border:1px solid var(--color-border)!important;border-radius:8px!important;font-size:.78rem!important}
-        .leaflet-control-layers label{color:var(--color-text-muted)!important}
+        .leaflet-control-layers label{color:#888!important}
         .leaflet-control-layers-separator{border-top-color:var(--color-border)!important}
         .leaflet-tooltip{background:#161b22;color:var(--color-text-light);border:1px solid var(--color-border);font-family:'Open Sans',sans-serif;font-size:.75rem;padding:4px 8px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
         .leaflet-tooltip-top:before{border-top-color:#161b22}
@@ -85,7 +115,6 @@
             .riesgo-app{flex-direction:column-reverse;height:auto}
             .panel-lateral{width:100%;max-height:50vh;border-left:none;border-top:1px solid var(--color-border)}
             #map{height:55vh}
-            .map-loading{left:50%}
         }
     </style>
 </head>
@@ -120,7 +149,9 @@
     </header>
 
     <div class="riesgo-app">
-        <div id="map"></div>
+        <div id="map">
+            <div class="map-message" id="mapMessage"></div>
+        </div>
 
         <div class="map-loading" id="mapLoading">
             <div class="spinner"></div>
@@ -131,17 +162,39 @@
         <div class="panel-lateral">
             <div class="panel-header">
                 <h2><span>RiesgoECU</span> Analizador Multiamenaza</h2>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar parroquia, canton o provincia..." autocomplete="off">
+                    <button class="search-clear" id="searchClear" type="button">&times;</button>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+
+                <!-- Selectors -->
                 <div class="selector-group">
                     <select id="selProvincia"><option value="">-- Seleccionar provincia --</option></select>
-                    <select id="selCanton" disabled><option value="">-- Seleccionar cantón --</option></select>
+                    <select id="selCanton" disabled><option value="">-- Seleccionar canton --</option></select>
                     <select id="selParroquia" disabled><option value="">-- Seleccionar parroquia --</option></select>
                 </div>
-                <button class="btn-reset" id="btnReset" style="display:none" onclick="resetView()">Ver Ecuador completo</button>
+
+                <!-- Buttons -->
+                <div class="btn-group">
+                    <button class="btn-reset" id="btnReset" style="display:none">Ver Ecuador completo</button>
+                    <button class="btn-all" id="btnAll">Ver todas las parroquias</button>
+                </div>
+
+                <!-- Progress -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-text"><span id="progressText"></span><span id="progressPct">0%</span></div>
+                    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                </div>
             </div>
+
             <div class="panel-body" id="panelBody">
                 <div class="panel-placeholder" id="panelPlaceholder">
                     <svg width="56" height="56" viewBox="0 0 64 64" fill="none"><path d="M32 4L58 18V46L32 60L6 46V18L32 4Z" stroke="#1B998B" stroke-width="1.5" fill="rgba(27,153,139,.08)"/><circle cx="32" cy="32" r="8" stroke="#1B998B" stroke-width="1.2" fill="rgba(27,153,139,.1)"/><path d="M32 24V40M24 32H40" stroke="#1B998B" stroke-width="1"/></svg>
-                    Selecciona una provincia y parroquia<br>o haz clic en el mapa<br>para ver el análisis de riesgo.
+                    Haz clic en una provincia del mapa,<br>usa el buscador o los selectores<br>para explorar el riesgo multiamenaza.
                 </div>
                 <div id="panelInfo" style="display:none"></div>
             </div>
@@ -150,71 +203,82 @@
 
     <script>
     // ============================================================
-    // CONFIG
+    // 1. CONFIG & STATE
     // ============================================================
     var SUPABASE_URL = 'https://vkqqveyaaijuwidpxyhq.supabase.co';
     var SUPABASE_KEY = 'sb_publishable_P55pLxsilQ7Bx4oxagpGOg_WofWIrR1';
     var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    var COLORS = {
-        'MUY ALTO': '#dc2626', 'ALTO': '#f97316', 'MEDIO': '#eab308',
-        'BAJO': '#22c55e', 'MUY BAJO': '#3b82f6'
-    };
-    var COLOR_NEUTRAL = '#3a3f47';
+    var COLORS = { 'MUY ALTO':'#dc2626','ALTO':'#f97316','MEDIO':'#eab308','BAJO':'#22c55e','MUY BAJO':'#3b82f6' };
+    var BADGE_BG = { 'MUY ALTO':'rgba(220,38,38,.2)','ALTO':'rgba(249,115,22,.2)','MEDIO':'rgba(234,179,8,.2)','BAJO':'rgba(34,197,94,.2)','MUY BAJO':'rgba(59,130,246,.2)' };
     var COLOR_NODATA = '#555555';
 
     // State
-    var allParroquias = [];
+    var allList = [];              // lightweight parroquia list (for search/selectors)
+    var provinceGeoData = [];      // province GeoJSON from cache
+    var provinceRiskAvg = {};      // { provinceName: avgRiesgo }
     var riesgoIndex = {}, poblacionIndex = {}, sismicaIndex = {}, volcanicaIndex = {}, hidroIndex = {}, eventosIndex = {};
-    var geojsonLayer = null;
+    var provinceLayer = null;      // L.geoJSON of province outlines
+    var parroquiaLayers = {};      // { provinceName: L.geoJSON }
+    var loadedProvinces = {};      // { provinceName: true }
     var selectedCodigo = null;
     var ecuadorBounds = null;
+    var allParroquiasLoaded = false;
+    var loadingAborted = false;
 
     function setStatus(msg) { document.getElementById('loadStatus').textContent = msg; }
 
     // ============================================================
-    // MAP INIT
+    // 2. MAP INIT
     // ============================================================
     var map = L.map('map', { center: [-1.4, -80.5], zoom: 6, zoomControl: true, preferCanvas: true });
 
-    // 3 base layers
-    var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap', maxZoom: 18
-    });
-    var topoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '&copy; Esri', maxZoom: 18
-    });
-    var satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '&copy; Esri', maxZoom: 18
-    });
+    // Custom panes for layer ordering
+    map.createPane('provincePane');
+    map.getPane('provincePane').style.zIndex = 350;
+    map.createPane('parroquiaPane');
+    map.getPane('parroquiaPane').style.zIndex = 450;
 
+    var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 18 });
+    var topoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { attribution: '&copy; Esri', maxZoom: 18 });
+    var satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '&copy; Esri', maxZoom: 18 });
     osmLayer.addTo(map);
-
-    L.control.layers({
-        'OpenStreetMap': osmLayer,
-        'Esri Topográfico': topoLayer,
-        'Esri Satelital': satLayer
-    }, null, { position: 'topright' }).addTo(map);
+    L.control.layers({ 'OpenStreetMap': osmLayer, 'Esri Topografico': topoLayer, 'Esri Satelital': satLayer }, null, { position: 'topright' }).addTo(map);
 
     // Legend
     var legend = L.control({ position: 'bottomleft' });
     legend.onAdd = function () {
-        var div = L.DomUtil.create('div', 'map-legend');
-        div.innerHTML = '<h4>Nivel de Riesgo</h4>' +
+        var d = L.DomUtil.create('div', 'map-legend');
+        d.innerHTML = '<h4>Nivel de Riesgo</h4>' +
             '<div><i style="background:#dc2626"></i> Muy Alto (7-10)</div>' +
             '<div><i style="background:#f97316"></i> Alto (5-7)</div>' +
             '<div><i style="background:#eab308"></i> Medio (3-5)</div>' +
             '<div><i style="background:#22c55e"></i> Bajo (1.5-3)</div>' +
             '<div><i style="background:#3b82f6"></i> Muy Bajo (0-1.5)</div>' +
-            '<div><i style="background:#555555"></i> Sin datos</div>' +
-            '<div><i style="background:#3a3f47"></i> No seleccionado</div>';
-        return div;
+            '<div><i style="background:#555555"></i> Sin datos</div>';
+        return d;
     };
     legend.addTo(map);
 
     // ============================================================
-    // DATA LOADING
+    // 3. DATA LOADING
     // ============================================================
+    function riskColor(val) {
+        if (val >= 7) return '#dc2626';
+        if (val >= 5) return '#f97316';
+        if (val >= 3) return '#eab308';
+        if (val >= 1.5) return '#22c55e';
+        return '#3b82f6';
+    }
+
+    function riskClass(val) {
+        if (val >= 7) return 'MUY ALTO';
+        if (val >= 5) return 'ALTO';
+        if (val >= 3) return 'MEDIO';
+        if (val >= 1.5) return 'BAJO';
+        return 'MUY BAJO';
+    }
+
     async function fetchAll(table, columns) {
         var all = [], from = 0, ps = 1000;
         while (true) {
@@ -228,44 +292,63 @@
         return all;
     }
 
-    async function loadAll() {
+    async function loadInitial() {
         try {
-            setStatus('Cargando geometrías de parroquias...');
-            var rpcRes = await sb.rpc('get_parroquias_geojson');
-            if (rpcRes.error) throw new Error('RPC: ' + rpcRes.error.message);
-            allParroquias = rpcRes.data || [];
-            setStatus('Parroquias: ' + allParroquias.length + ' cargadas');
+            // 1. Lightweight parroquia list (for search + selectors)
+            setStatus('Cargando lista de parroquias...');
+            var listRes = await sb.rpc('get_parroquias_lista');
+            if (listRes.error) throw new Error('Lista: ' + listRes.error.message);
+            allList = listRes.data || [];
 
-            setStatus('Cargando índices de riesgo...');
-            var rows = await fetchAll('indice_riesgo', '*');
-            rows.forEach(function (r) { riesgoIndex[r.codigo_parroquia] = r; });
-
-            setStatus('Cargando población...');
-            rows = await fetchAll('poblacion_inec', '*');
-            rows.forEach(function (r) { poblacionIndex[r.codigo_parroquia] = r; });
-
-            setStatus('Cargando amenazas...');
-            var p1 = fetchAll('amenaza_sismica', '*').then(function (r) { r.forEach(function (x) { sismicaIndex[x.codigo_parroquia] = x; }); });
-            var p2 = fetchAll('amenaza_volcanica', '*').then(function (r) { r.forEach(function (x) { volcanicaIndex[x.codigo_parroquia] = x; }); });
-            var p3 = fetchAll('amenaza_hidro', '*').then(function (r) { r.forEach(function (x) { hidroIndex[x.codigo_parroquia] = x; }); });
-            await Promise.all([p1, p2, p3]);
-
-            setStatus('Cargando eventos históricos...');
-            var evRows = await fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento');
+            // Compute province avg risk
             var agg = {};
-            evRows.forEach(function (r) {
-                if (!agg[r.codigo_parroquia]) agg[r.codigo_parroquia] = {};
-                agg[r.codigo_parroquia][r.tipo_evento] = (agg[r.codigo_parroquia][r.tipo_evento] || 0) + 1;
+            allList.forEach(function(p) {
+                if (!agg[p.provincia]) agg[p.provincia] = { sum: 0, count: 0 };
+                if (p.riesgo_total != null) {
+                    agg[p.provincia].sum += parseFloat(p.riesgo_total);
+                    agg[p.provincia].count++;
+                }
             });
-            Object.keys(agg).forEach(function (c) {
-                var types = Object.entries(agg[c]).sort(function (a, b) { return b[1] - a[1]; });
-                eventosIndex[c] = { total: types.reduce(function (s, t) { return s + t[1]; }, 0), types: types };
+            Object.keys(agg).forEach(function(prov) {
+                provinceRiskAvg[prov] = agg[prov].count > 0 ? agg[prov].sum / agg[prov].count : 0;
             });
 
+            // 2. Province outlines (cached, ~80KB)
+            setStatus('Cargando mapa de provincias...');
+            var provRes = await sb.rpc('get_provincias_geojson');
+            if (provRes.error) throw new Error('Provincias: ' + provRes.error.message);
+            provinceGeoData = provRes.data || [];
+
+            // 3. Tabular data in parallel
+            setStatus('Cargando datos de riesgo...');
+            await Promise.all([
+                fetchAll('indice_riesgo', '*').then(function(r) { r.forEach(function(x) { riesgoIndex[x.codigo_parroquia] = x; }); }),
+                fetchAll('poblacion_inec', '*').then(function(r) { r.forEach(function(x) { poblacionIndex[x.codigo_parroquia] = x; }); }),
+                fetchAll('amenaza_sismica', '*').then(function(r) { r.forEach(function(x) { sismicaIndex[x.codigo_parroquia] = x; }); }),
+                fetchAll('amenaza_volcanica', '*').then(function(r) { r.forEach(function(x) { volcanicaIndex[x.codigo_parroquia] = x; }); }),
+                fetchAll('amenaza_hidro', '*').then(function(r) { r.forEach(function(x) { hidroIndex[x.codigo_parroquia] = x; }); })
+            ]);
+
+            // 4. Events
+            setStatus('Cargando eventos historicos...');
+            var evRows = await fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento');
+            var evAgg = {};
+            evRows.forEach(function(r) {
+                if (!evAgg[r.codigo_parroquia]) evAgg[r.codigo_parroquia] = {};
+                evAgg[r.codigo_parroquia][r.tipo_evento] = (evAgg[r.codigo_parroquia][r.tipo_evento] || 0) + 1;
+            });
+            Object.keys(evAgg).forEach(function(c) {
+                var types = Object.entries(evAgg[c]).sort(function(a, b) { return b[1] - a[1]; });
+                eventosIndex[c] = { total: types.reduce(function(s, t) { return s + t[1]; }, 0), types: types };
+            });
+
+            // 5. Render
             setStatus('Renderizando mapa...');
-            renderMap();
+            renderProvinces();
             populateSelectors();
+            initSearch();
             document.getElementById('mapLoading').style.display = 'none';
+
         } catch (err) {
             console.error(err);
             setStatus('Error: ' + err.message);
@@ -273,79 +356,253 @@
     }
 
     // ============================================================
-    // RENDER MAP - all neutral gray initially
+    // 4. RENDER PROVINCES
     // ============================================================
-    function renderMap() {
-        var features = allParroquias.map(function (p) {
+    function renderProvinces() {
+        if (provinceLayer) { map.removeLayer(provinceLayer); provinceLayer = null; }
+
+        var features = provinceGeoData.map(function(p) {
             var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
-            var riesgo = riesgoIndex[p.codigo] || {};
             return {
                 type: 'Feature',
-                properties: {
-                    codigo: p.codigo, nombre: p.nombre, canton: p.canton, provincia: p.provincia,
-                    clasificacion: riesgo.clasificacion || null,
-                    riesgo_total: riesgo.riesgo_total || null
-                },
+                properties: { provincia: p.provincia, count: p.parroquia_count, riskAvg: provinceRiskAvg[p.provincia] || 0 },
                 geometry: geom
             };
-        }).filter(function (f) { return f.geometry; });
+        }).filter(function(f) { return f.geometry; });
 
-        var fc = { type: 'FeatureCollection', features: features };
-
-        geojsonLayer = L.geoJSON(fc, {
-            style: function () {
-                return { fillColor: COLOR_NEUTRAL, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3, opacity: 0.5 };
+        provinceLayer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
+            pane: 'provincePane',
+            style: function(f) {
+                var c = riskColor(f.properties.riskAvg);
+                return { fillColor: c, fillOpacity: 0.5, color: '#2a2f37', weight: 1, opacity: 0.7 };
             },
-            onEachFeature: function (feature, layer) {
-                layer.on('click', function () { selectParroquia(feature.properties.codigo); });
-                layer.on('mouseover', function () {
-                    if (feature.properties.codigo !== selectedCodigo) {
-                        layer.setStyle({ weight: 1.5, color: '#aaa', fillOpacity: 0.65 });
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function() {
+                    if (!loadedProvinces[feature.properties.provincia]) {
+                        selectProvince(feature.properties.provincia);
                     }
-                    layer.bindTooltip(feature.properties.nombre, { sticky: true, direction: 'top', offset: [0, -8] }).openTooltip();
                 });
-                layer.on('mouseout', function () {
+                layer.on('mouseover', function() {
+                    if (loadedProvinces[feature.properties.provincia]) return;
+                    layer.setStyle({ weight: 2, color: '#aaa', fillOpacity: 0.65 });
+                    var avg = feature.properties.riskAvg;
+                    var cl = riskClass(avg);
+                    layer.bindTooltip(
+                        '<b>' + feature.properties.provincia + '</b><br>' +
+                        feature.properties.count + ' parroquias | Riesgo prom: ' + avg.toFixed(1) + ' [' + cl + ']',
+                        { sticky: true, direction: 'top', offset: [0, -8] }
+                    ).openTooltip();
+                });
+                layer.on('mouseout', function() {
+                    if (loadedProvinces[feature.properties.provincia]) return;
+                    var c = riskColor(feature.properties.riskAvg);
+                    layer.setStyle({ fillColor: c, fillOpacity: 0.5, weight: 1, color: '#2a2f37', opacity: 0.7 });
+                    layer.closeTooltip();
+                });
+            }
+        }).addTo(map);
+
+        ecuadorBounds = provinceLayer.getBounds();
+        map.fitBounds(ecuadorBounds, { padding: [20, 20] });
+    }
+
+    function updateProvinceFill() {
+        if (!provinceLayer) return;
+        provinceLayer.eachLayer(function(layer) {
+            var prov = layer.feature.properties.provincia;
+            if (loadedProvinces[prov]) {
+                layer.setStyle({ fillOpacity: 0, weight: 1.2, color: '#444', opacity: 0.6 });
+            } else {
+                var c = riskColor(layer.feature.properties.riskAvg);
+                layer.setStyle({ fillColor: c, fillOpacity: 0.5, weight: 1, color: '#2a2f37', opacity: 0.7 });
+            }
+        });
+    }
+
+    // ============================================================
+    // 5. LOAD PARROQUIAS
+    // ============================================================
+    async function loadProvinceParroquias(provinceName) {
+        if (loadedProvinces[provinceName]) {
+            // Already cached - just ensure it's on the map
+            if (!map.hasLayer(parroquiaLayers[provinceName])) {
+                parroquiaLayers[provinceName].addTo(map);
+            }
+            return;
+        }
+
+        var res = await sb.rpc('get_parroquias_by_provincia', { p_provincia: provinceName });
+        if (res.error) { console.error(res.error); return; }
+        var data = res.data || [];
+
+        var features = data.map(function(p) {
+            var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
+            return {
+                type: 'Feature',
+                properties: { codigo: p.codigo, nombre: p.nombre, canton: p.canton, provincia: p.provincia, clasificacion: p.clasificacion, riesgo_total: p.riesgo_total },
+                geometry: geom
+            };
+        }).filter(function(f) { return f.geometry; });
+
+        var layer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
+            pane: 'parroquiaPane',
+            style: function(f) { return parroquiaStyle(f.properties, false); },
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function() { selectParroquia(feature.properties.codigo); });
+                layer.on('mouseover', function() {
                     if (feature.properties.codigo !== selectedCodigo) {
-                        applyCurrentStyle(layer);
+                        layer.setStyle({ weight: 1.5, color: '#aaa', fillOpacity: 0.7 });
+                    }
+                    var r = feature.properties.riesgo_total;
+                    var tip = '<b>' + feature.properties.nombre + '</b>';
+                    if (r != null) tip += '<br>Riesgo: ' + r + ' [' + feature.properties.clasificacion + ']';
+                    layer.bindTooltip(tip, { sticky: true, direction: 'top', offset: [0, -8] }).openTooltip();
+                });
+                layer.on('mouseout', function() {
+                    if (feature.properties.codigo !== selectedCodigo) {
+                        layer.setStyle(parroquiaStyle(feature.properties, false));
                     }
                     layer.closeTooltip();
                 });
             }
         }).addTo(map);
 
-        ecuadorBounds = geojsonLayer.getBounds();
-        map.fitBounds(ecuadorBounds, { padding: [20, 20] });
+        parroquiaLayers[provinceName] = layer;
+        loadedProvinces[provinceName] = true;
+        updateProvinceFill();
     }
 
-    function applyCurrentStyle(layer) {
-        var props = layer.feature.properties;
-        if (selectedCodigo) {
-            if (props.codigo === selectedCodigo) {
-                var color = props.clasificacion ? COLORS[props.clasificacion] || COLOR_NODATA : COLOR_NODATA;
-                layer.setStyle({ fillColor: color, fillOpacity: 0.85, color: '#fff', weight: 2.5 });
-            } else {
-                layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.2, color: '#2a2f37', weight: 0.2 });
-            }
-        } else {
-            layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3 });
+    function parroquiaStyle(props, isSelected) {
+        var cl = props.clasificacion;
+        var color = cl ? (COLORS[cl] || COLOR_NODATA) : COLOR_NODATA;
+        if (isSelected) {
+            return { fillColor: color, fillOpacity: 0.85, color: '#fff', weight: 2.5, opacity: 1 };
+        }
+        return { fillColor: color, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3, opacity: 0.5 };
+    }
+
+    function refreshParroquiaStyles() {
+        Object.keys(parroquiaLayers).forEach(function(prov) {
+            parroquiaLayers[prov].eachLayer(function(layer) {
+                var props = layer.feature.properties;
+                layer.setStyle(parroquiaStyle(props, props.codigo === selectedCodigo));
+                if (props.codigo === selectedCodigo) layer.bringToFront();
+            });
+        });
+    }
+
+    async function selectProvince(provinceName) {
+        showMapMsg('Cargando parroquias de ' + provinceName + '...');
+        document.getElementById('selProvincia').value = provinceName;
+        document.getElementById('btnReset').style.display = 'block';
+
+        await loadProvinceParroquias(provinceName);
+        showMapMsg('');
+
+        updateCantonSelector(provinceName, null);
+        document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
+        document.getElementById('selParroquia').disabled = true;
+
+        if (parroquiaLayers[provinceName]) {
+            map.fitBounds(parroquiaLayers[provinceName].getBounds(), { padding: [40, 40] });
         }
     }
 
-    function refreshAllStyles() {
-        if (!geojsonLayer) return;
-        geojsonLayer.eachLayer(function (layer) { applyCurrentStyle(layer); });
+    async function loadAllParroquias() {
+        if (allParroquiasLoaded) {
+            // Re-show cached layers
+            Object.keys(parroquiaLayers).forEach(function(prov) {
+                if (!map.hasLayer(parroquiaLayers[prov])) parroquiaLayers[prov].addTo(map);
+            });
+            updateProvinceFill();
+            document.getElementById('btnAll').classList.add('active');
+            document.getElementById('btnReset').style.display = 'block';
+            return;
+        }
+
+        loadingAborted = false;
+        var provNames = [];
+        var provSet = {};
+        allList.forEach(function(p) {
+            if (!provSet[p.provincia]) { provSet[p.provincia] = true; provNames.push(p.provincia); }
+        });
+        provNames.sort();
+
+        var prog = document.getElementById('progressContainer');
+        var progText = document.getElementById('progressText');
+        var progPct = document.getElementById('progressPct');
+        var progFill = document.getElementById('progressFill');
+        var btnAll = document.getElementById('btnAll');
+
+        prog.style.display = 'block';
+        btnAll.disabled = true;
+        document.getElementById('btnReset').style.display = 'block';
+
+        var loaded = 0;
+        for (var i = 0; i < provNames.length; i++) {
+            if (loadingAborted) break;
+
+            var prov = provNames[i];
+            progText.textContent = prov + ' (' + (i + 1) + '/' + provNames.length + ')';
+            var pct = Math.round(((i + 1) / provNames.length) * 100);
+            progPct.textContent = pct + '%';
+            progFill.style.width = pct + '%';
+
+            await loadProvinceParroquias(prov);
+            loaded++;
+        }
+
+        if (!loadingAborted) {
+            allParroquiasLoaded = true;
+            btnAll.classList.add('active');
+            var totalP = Object.keys(parroquiaLayers).reduce(function(s, k) {
+                var n = 0; parroquiaLayers[k].eachLayer(function() { n++; }); return s + n;
+            }, 0);
+            progText.textContent = totalP + ' parroquias cargadas';
+            progPct.textContent = '100%';
+            progFill.style.width = '100%';
+            setTimeout(function() { prog.style.display = 'none'; }, 2500);
+        } else {
+            prog.style.display = 'none';
+        }
+        btnAll.disabled = false;
     }
 
     // ============================================================
-    // SELECT PARROQUIA
+    // 6. PARROQUIA SELECTION & PANEL
     // ============================================================
-    function selectParroquia(codigo) {
-        selectedCodigo = codigo;
-        document.getElementById('btnReset').style.display = 'block';
-
-        var p = allParroquias.find(function (x) { return x.codigo === codigo; });
+    async function selectParroquia(codigo) {
+        var p = allList.find(function(x) { return x.codigo === codigo; });
         if (!p) return;
 
+        // Ensure province parroquias are loaded
+        if (!loadedProvinces[p.provincia]) {
+            showMapMsg('Cargando parroquias de ' + p.provincia + '...');
+            await loadProvinceParroquias(p.provincia);
+            showMapMsg('');
+        }
+
+        selectedCodigo = codigo;
+        document.getElementById('btnReset').style.display = 'block';
+        refreshParroquiaStyles();
+
+        // Zoom to parroquia
+        var targetLayer = null;
+        if (parroquiaLayers[p.provincia]) {
+            parroquiaLayers[p.provincia].eachLayer(function(layer) {
+                if (layer.feature.properties.codigo === codigo) targetLayer = layer;
+            });
+        }
+        if (targetLayer) {
+            map.fitBounds(targetLayer.getBounds(), { padding: [60, 60], maxZoom: 12 });
+        }
+
+        // Sync selectors
+        document.getElementById('selProvincia').value = p.provincia;
+        updateCantonSelector(p.provincia, p.canton);
+        updateParroquiaSelector(p.provincia, p.canton, codigo);
+
+        // Build panel
         var riesgo = riesgoIndex[codigo];
         var pob = poblacionIndex[codigo];
         var sis = sismicaIndex[codigo];
@@ -353,14 +610,11 @@
         var hid = hidroIndex[codigo];
         var ev = eventosIndex[codigo] || { total: 0, types: [] };
 
-        // Check if parroquia has data
-        var hasData = !!riesgo;
-
         var html = '<p class="parroquia-name">' + esc(p.nombre) + '</p>' +
             '<p class="parroquia-loc">' + esc(p.canton) + ', ' + esc(p.provincia) + '</p>';
 
-        if (!hasData) {
-            html += '<div class="panel-nodata">Datos en procesamiento<br><small>Esta parroquia aún no tiene índice de riesgo calculado.</small></div>';
+        if (!riesgo) {
+            html += '<div class="panel-nodata">Datos en procesamiento<br><small>Esta parroquia aun no tiene indice de riesgo calculado.</small></div>';
         } else {
             var clasifClass = (riesgo.clasificacion || 'medio').toLowerCase().replace(' ', '-');
             var riesgoVal = riesgo.riesgo_total || 0;
@@ -369,143 +623,209 @@
 
             var maxEv = ev.types.length ? ev.types[0][1] : 1;
             var evBars = '';
-            ev.types.slice(0, 6).forEach(function (t) {
-                var pct = Math.round((t[1] / maxEv) * 100);
+            ev.types.slice(0, 6).forEach(function(t) {
+                var pctEv = Math.round((t[1] / maxEv) * 100);
                 evBars += '<div class="evento-bar"><span class="evento-bar-label">' + t[0] + '</span>' +
-                    '<div class="evento-bar-track"><div class="evento-bar-fill" style="width:' + pct + '%"></div></div>' +
+                    '<div class="evento-bar-track"><div class="evento-bar-fill" style="width:' + pctEv + '%"></div></div>' +
                     '<span class="evento-bar-count">' + t[1] + '</span></div>';
             });
 
             html +=
                 '<div class="info-section">' +
                     '<div class="info-section-title">Nivel de Riesgo</div>' +
-                    '<div class="info-row"><span class="info-label">Clasificación</span><span class="riesgo-badge ' + clasifClass + '">' + riesgo.clasificacion + '</span></div>' +
+                    '<div class="info-row"><span class="info-label">Clasificacion</span><span class="riesgo-badge ' + clasifClass + '">' + riesgo.clasificacion + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Riesgo total</span><span class="info-value">' + riesgoVal + ' / 10</span></div>' +
                     '<div class="riesgo-gauge"><div class="riesgo-gauge-fill" style="width:' + gaugeW + '%;background:' + gaugeC + '"></div></div>' +
                     '<div class="info-row"><span class="info-label">Amenaza</span><span class="info-value">' + (riesgo.indice_amenaza || 0) + '</span></div>' +
-                    '<div class="info-row"><span class="info-label">Exposición</span><span class="info-value">' + (riesgo.indice_exposicion || 0) + '</span></div>' +
+                    '<div class="info-row"><span class="info-label">Exposicion</span><span class="info-value">' + (riesgo.indice_exposicion || 0) + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Falta capacidad</span><span class="info-value">' + (riesgo.indice_capacidad || 0) + '</span></div>' +
                 '</div>' +
-
                 '<div class="info-section">' +
-                    '<div class="info-section-title">Eventos Históricos (' + ev.total + ')</div>' +
+                    '<div class="info-section-title">Eventos Historicos (' + ev.total + ')</div>' +
                     (evBars || '<div class="info-row"><span class="info-label">Sin eventos registrados</span></div>') +
                 '</div>' +
-
                 '<div class="info-section">' +
-                    '<div class="info-section-title">Población (INEC 2022)</div>' +
-                    '<div class="info-row"><span class="info-label">Población total</span><span class="info-value">' + fmt(pob ? pob.poblacion_total : null) + '</span></div>' +
+                    '<div class="info-section-title">Poblacion (INEC 2022)</div>' +
+                    '<div class="info-row"><span class="info-label">Poblacion total</span><span class="info-value">' + fmt(pob ? pob.poblacion_total : null) + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Viviendas</span><span class="info-value">' + fmt(pob ? pob.viviendas : null) + '</span></div>' +
                     '<div class="info-row"><span class="info-label">NBI</span><span class="info-value">' + (pob ? pob.nbi_porcentaje : 'N/D') + '%</span></div>' +
-                    '<div class="info-row"><span class="info-label">Densidad</span><span class="info-value">' + (pob ? pob.densidad_hab_km2 : 'N/D') + ' hab/km²</span></div>' +
+                    '<div class="info-row"><span class="info-label">Densidad</span><span class="info-value">' + (pob ? pob.densidad_hab_km2 : 'N/D') + ' hab/km2</span></div>' +
                 '</div>' +
-
                 '<div class="info-section">' +
-                    '<div class="info-section-title">Amenaza Sísmica</div>' +
+                    '<div class="info-section-title">Amenaza Sismica</div>' +
                     '<div class="info-row"><span class="info-label">Nivel</span><span class="info-value">' + (sis ? sis.nivel : 'N/D') + '</span></div>' +
-                    '<div class="info-row"><span class="info-label">PGA (475 años)</span><span class="info-value">' + (sis ? sis.pga_475 + ' g' : 'N/D') + '</span></div>' +
+                    '<div class="info-row"><span class="info-label">PGA (475 anos)</span><span class="info-value">' + (sis ? sis.pga_475 + ' g' : 'N/D') + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Fuente</span><span class="info-value">' + esc(sis ? sis.fuente : 'N/D') + '</span></div>' +
                 '</div>' +
-
                 '<div class="info-section">' +
-                    '<div class="info-section-title">Amenaza Volcánica</div>' +
+                    '<div class="info-section-title">Amenaza Volcanica</div>' +
                     '<div class="info-row"><span class="info-label">Nivel</span><span class="info-value">' + (vol ? vol.nivel : 'N/D') + '</span></div>' +
-                    '<div class="info-row"><span class="info-label">Volcán referencia</span><span class="info-value">' + esc(vol ? vol.volcan_referencia : 'N/D') + '</span></div>' +
+                    '<div class="info-row"><span class="info-label">Volcan referencia</span><span class="info-value">' + esc(vol ? vol.volcan_referencia : 'N/D') + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Distancia</span><span class="info-value">' + (vol ? vol.distancia_km + ' km' : 'N/D') + '</span></div>' +
                 '</div>' +
-
                 '<div class="info-section">' +
-                    '<div class="info-section-title">Amenaza Hidrometeorológica</div>' +
-                    '<div class="info-row"><span class="info-label">Inundación</span><span class="info-value">' + (hid ? hid.nivel_inundacion : 'N/D') + '</span></div>' +
+                    '<div class="info-section-title">Amenaza Hidrometeorologica</div>' +
+                    '<div class="info-row"><span class="info-label">Inundacion</span><span class="info-value">' + (hid ? hid.nivel_inundacion : 'N/D') + '</span></div>' +
                     '<div class="info-row"><span class="info-label">Deslizamiento</span><span class="info-value">' + (hid ? hid.nivel_deslizamiento : 'N/D') + '</span></div>' +
-                    '<div class="info-row"><span class="info-label">Precipitación anual</span><span class="info-value">' + fmt(hid ? hid.precipitacion_anual_mm : null) + ' mm</span></div>' +
+                    '<div class="info-row"><span class="info-label">Precipitacion anual</span><span class="info-value">' + fmt(hid ? hid.precipitacion_anual_mm : null) + ' mm</span></div>' +
                 '</div>' +
-
                 '<button class="btn-pdf" onclick="generarPDF()">Generar Informe PDF</button>';
         }
 
         document.getElementById('panelPlaceholder').style.display = 'none';
         document.getElementById('panelInfo').style.display = 'block';
         document.getElementById('panelInfo').innerHTML = html;
+    }
 
-        // Restyle map
-        refreshAllStyles();
+    // ============================================================
+    // 7. SEARCH AUTOCOMPLETE
+    // ============================================================
+    function normalize(s) {
+        return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
 
-        // Zoom to selected parroquia
-        if (geojsonLayer) {
-            geojsonLayer.eachLayer(function (layer) {
-                if (layer.feature.properties.codigo === codigo) {
-                    map.fitBounds(layer.getBounds(), { padding: [60, 60], maxZoom: 12 });
+    function initSearch() {
+        var input = document.getElementById('searchInput');
+        var resultsDiv = document.getElementById('searchResults');
+        var clearBtn = document.getElementById('searchClear');
+        var hlIndex = -1;
+
+        input.addEventListener('input', function() {
+            var q = normalize(this.value.trim());
+            clearBtn.style.display = this.value ? 'block' : 'none';
+
+            if (q.length < 2) { resultsDiv.style.display = 'none'; return; }
+
+            var matches = [];
+            for (var i = 0; i < allList.length && matches.length < 8; i++) {
+                var p = allList[i];
+                if (normalize(p.nombre).indexOf(q) !== -1 ||
+                    normalize(p.canton).indexOf(q) !== -1 ||
+                    normalize(p.provincia).indexOf(q) !== -1) {
+                    matches.push(p);
                 }
+            }
+
+            if (!matches.length) {
+                resultsDiv.innerHTML = '<div style="padding:.6rem .7rem;color:#555;font-size:.78rem">Sin resultados</div>';
+                resultsDiv.style.display = 'block';
+                hlIndex = -1;
+                return;
+            }
+
+            var html = '';
+            matches.forEach(function(m, idx) {
+                var cl = m.clasificacion;
+                var badgeColor = cl ? (COLORS[cl] || '#555') : '#555';
+                var badgeBg = cl ? (BADGE_BG[cl] || 'rgba(85,85,85,.2)') : 'rgba(85,85,85,.2)';
+                html += '<div class="search-result-item" data-codigo="' + m.codigo + '" data-idx="' + idx + '">' +
+                    '<div class="search-result-info"><div class="search-result-name">' + esc(m.nombre) + '</div>' +
+                    '<div class="search-result-loc">' + esc(m.canton) + ', ' + esc(m.provincia) + '</div></div>' +
+                    '<span class="search-result-badge" style="background:' + badgeBg + ';color:' + badgeColor + '">' + (cl || '---') + '</span>' +
+                    '</div>';
             });
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            hlIndex = -1;
+
+            // Click handlers
+            resultsDiv.querySelectorAll('.search-result-item').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var codigo = this.getAttribute('data-codigo');
+                    var p = allList.find(function(x) { return x.codigo === codigo; });
+                    if (p) input.value = p.nombre;
+                    resultsDiv.style.display = 'none';
+                    clearBtn.style.display = 'block';
+                    selectParroquia(codigo);
+                });
+            });
+        });
+
+        input.addEventListener('keydown', function(e) {
+            var items = resultsDiv.querySelectorAll('.search-result-item');
+            if (!items.length || resultsDiv.style.display === 'none') return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                hlIndex = Math.min(hlIndex + 1, items.length - 1);
+                updateHL(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                hlIndex = Math.max(hlIndex - 1, 0);
+                updateHL(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (hlIndex >= 0 && items[hlIndex]) items[hlIndex].click();
+            } else if (e.key === 'Escape') {
+                resultsDiv.style.display = 'none';
+                hlIndex = -1;
+            }
+        });
+
+        function updateHL(items) {
+            items.forEach(function(el, i) {
+                el.classList.toggle('hl', i === hlIndex);
+            });
+            if (hlIndex >= 0 && items[hlIndex]) items[hlIndex].scrollIntoView({ block: 'nearest' });
         }
 
-        // Sync selectors
-        document.getElementById('selProvincia').value = p.provincia;
-        updateCantonSelector(p.provincia, p.canton);
-        updateParroquiaSelector(p.provincia, p.canton, codigo);
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            clearBtn.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            input.focus();
+        });
+
+        // Close results on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                resultsDiv.style.display = 'none';
+            }
+        });
     }
 
     // ============================================================
-    // RESET VIEW
-    // ============================================================
-    function resetView() {
-        selectedCodigo = null;
-        document.getElementById('btnReset').style.display = 'none';
-        document.getElementById('panelPlaceholder').style.display = 'block';
-        document.getElementById('panelInfo').style.display = 'none';
-        document.getElementById('panelInfo').innerHTML = '';
-        document.getElementById('selProvincia').value = '';
-        document.getElementById('selCanton').innerHTML = '<option value="">-- Seleccionar cantón --</option>';
-        document.getElementById('selCanton').disabled = true;
-        document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
-        document.getElementById('selParroquia').disabled = true;
-        refreshAllStyles();
-        if (ecuadorBounds) map.fitBounds(ecuadorBounds, { padding: [20, 20] });
-    }
-
-    // ============================================================
-    // SELECTORS
+    // 8. SELECTORS (cascade)
     // ============================================================
     function populateSelectors() {
-        var provs = [];
         var provSet = {};
-        allParroquias.forEach(function (p) {
+        var provs = [];
+        allList.forEach(function(p) {
             if (!provSet[p.provincia]) { provSet[p.provincia] = true; provs.push(p.provincia); }
         });
         provs.sort();
 
         var sel = document.getElementById('selProvincia');
         sel.innerHTML = '<option value="">-- Seleccionar provincia --</option>';
-        provs.forEach(function (pr) {
+        provs.forEach(function(pr) {
             sel.innerHTML += '<option value="' + esc(pr) + '">' + esc(pr) + '</option>';
         });
 
-        sel.addEventListener('change', function () {
+        sel.addEventListener('change', function() {
             var prov = this.value;
             document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
             document.getElementById('selParroquia').disabled = true;
-
             if (!prov) { resetView(); return; }
-            updateCantonSelector(prov, null);
-            document.getElementById('btnReset').style.display = 'block';
-            zoomToFilter(function (p) { return p.provincia === prov; });
+            selectProvince(prov);
         });
 
-        document.getElementById('selCanton').addEventListener('change', function () {
+        document.getElementById('selCanton').addEventListener('change', function() {
             var canton = this.value;
             var prov = document.getElementById('selProvincia').value;
             if (!canton) {
                 document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
                 document.getElementById('selParroquia').disabled = true;
-                zoomToFilter(function (p) { return p.provincia === prov; });
+                if (prov && parroquiaLayers[prov]) {
+                    map.fitBounds(parroquiaLayers[prov].getBounds(), { padding: [40, 40] });
+                }
                 return;
             }
             updateParroquiaSelector(prov, canton, null);
-            zoomToFilter(function (p) { return p.provincia === prov && p.canton === canton; });
+            // Zoom to canton
+            zoomToFilter(function(p) { return p.provincia === prov && p.canton === canton; });
         });
 
-        document.getElementById('selParroquia').addEventListener('change', function () {
+        document.getElementById('selParroquia').addEventListener('change', function() {
             if (this.value) selectParroquia(this.value);
         });
     }
@@ -513,46 +833,89 @@
     function updateCantonSelector(prov, selectedCanton) {
         var cantSet = {};
         var cantones = [];
-        allParroquias.forEach(function (p) {
+        allList.forEach(function(p) {
             if (p.provincia === prov && !cantSet[p.canton]) { cantSet[p.canton] = true; cantones.push(p.canton); }
         });
         cantones.sort();
         var selC = document.getElementById('selCanton');
         selC.innerHTML = '<option value="">-- Todos los cantones --</option>';
-        cantones.forEach(function (c) {
-            var sel = c === selectedCanton ? ' selected' : '';
-            selC.innerHTML += '<option value="' + esc(c) + '"' + sel + '>' + esc(c) + '</option>';
+        cantones.forEach(function(c) {
+            var s = c === selectedCanton ? ' selected' : '';
+            selC.innerHTML += '<option value="' + esc(c) + '"' + s + '>' + esc(c) + '</option>';
         });
         selC.disabled = false;
     }
 
     function updateParroquiaSelector(prov, canton, selectedCode) {
-        var parrs = allParroquias.filter(function (p) { return p.provincia === prov && p.canton === canton; })
-            .sort(function (a, b) { return a.nombre.localeCompare(b.nombre); });
+        var parrs = allList.filter(function(p) { return p.provincia === prov && p.canton === canton; })
+            .sort(function(a, b) { return a.nombre.localeCompare(b.nombre); });
         var selP = document.getElementById('selParroquia');
         selP.innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
-        parrs.forEach(function (p) {
-            var sel = p.codigo === selectedCode ? ' selected' : '';
-            selP.innerHTML += '<option value="' + p.codigo + '"' + sel + '>' + esc(p.nombre) + '</option>';
+        parrs.forEach(function(p) {
+            var s = p.codigo === selectedCode ? ' selected' : '';
+            selP.innerHTML += '<option value="' + p.codigo + '"' + s + '>' + esc(p.nombre) + '</option>';
         });
         selP.disabled = false;
     }
 
     function zoomToFilter(fn) {
-        if (!geojsonLayer) return;
         var bounds = L.latLngBounds();
-        geojsonLayer.eachLayer(function (layer) {
-            if (fn(layer.feature.properties)) bounds.extend(layer.getBounds());
+        Object.keys(parroquiaLayers).forEach(function(prov) {
+            parroquiaLayers[prov].eachLayer(function(layer) {
+                if (fn(layer.feature.properties)) bounds.extend(layer.getBounds());
+            });
         });
         if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
     }
 
     // ============================================================
-    // PDF
+    // 9. RESET VIEW
+    // ============================================================
+    function resetView() {
+        loadingAborted = true;
+        selectedCodigo = null;
+
+        // Remove parroquia layers from map (keep in cache)
+        Object.keys(parroquiaLayers).forEach(function(prov) {
+            if (map.hasLayer(parroquiaLayers[prov])) map.removeLayer(parroquiaLayers[prov]);
+        });
+        parroquiaLayers = {};
+        loadedProvinces = {};
+        allParroquiasLoaded = false;
+
+        // Reset province fill
+        updateProvinceFill();
+
+        // Show province layer
+        if (provinceLayer && !map.hasLayer(provinceLayer)) provinceLayer.addTo(map);
+
+        // Reset UI
+        document.getElementById('btnReset').style.display = 'none';
+        document.getElementById('btnAll').classList.remove('active');
+        document.getElementById('btnAll').disabled = false;
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('panelPlaceholder').style.display = 'block';
+        document.getElementById('panelInfo').style.display = 'none';
+        document.getElementById('panelInfo').innerHTML = '';
+        document.getElementById('selProvincia').value = '';
+        document.getElementById('selCanton').innerHTML = '<option value="">-- Seleccionar canton --</option>';
+        document.getElementById('selCanton').disabled = true;
+        document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
+        document.getElementById('selParroquia').disabled = true;
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchClear').style.display = 'none';
+        document.getElementById('searchResults').style.display = 'none';
+
+        if (ecuadorBounds) map.fitBounds(ecuadorBounds, { padding: [20, 20] });
+    }
+
+    // ============================================================
+    // 10. PDF GENERATION
     // ============================================================
     function generarPDF() {
         if (!selectedCodigo) return;
-        var p = allParroquias.find(function (x) { return x.codigo === selectedCodigo; });
+        var p = allList.find(function(x) { return x.codigo === selectedCodigo; });
+        if (!p) return;
         var r = riesgoIndex[selectedCodigo] || {};
         var pob = poblacionIndex[selectedCodigo] || {};
         var sis = sismicaIndex[selectedCodigo] || {};
@@ -599,7 +962,7 @@
         doc.setFontSize(12); doc.setTextColor(27, 153, 139);
         doc.text('EVENTOS HISTORICOS (' + ev.total + ')', 20, y); y += 8;
         doc.setFontSize(10); doc.setTextColor(60, 60, 60);
-        ev.types.slice(0, 8).forEach(function (t) { doc.text(t[0] + ': ' + t[1], 25, y); y += 5; });
+        ev.types.slice(0, 8).forEach(function(t) { doc.text(t[0] + ': ' + t[1], 25, y); y += 5; });
 
         y += 10;
         doc.setFontSize(8); doc.setTextColor(150, 150, 150);
@@ -608,15 +971,25 @@
     }
 
     // ============================================================
-    // UTILS
+    // 11. UTILS
     // ============================================================
     function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function fmt(n) { return n != null ? Number(n).toLocaleString('es-EC') : 'N/D'; }
+    function showMapMsg(msg) {
+        var el = document.getElementById('mapMessage');
+        el.textContent = msg;
+        el.style.display = msg ? 'block' : 'none';
+    }
 
-    // Boot
+    // ============================================================
+    // 12. BUTTON HANDLERS & BOOT
+    // ============================================================
+    document.getElementById('btnReset').addEventListener('click', resetView);
+    document.getElementById('btnAll').addEventListener('click', loadAllParroquias);
+
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
-    loadAll();
+    loadInitial();
     </script>
     <script src="js/app.js"></script>
 </body>
