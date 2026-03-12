@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RiesgoECU - Analizador multiamenaza interactivo de Ecuador con mapa coroplético por parroquia">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RiesgoECU | Analizador Multiamenaza Ecuador">
+    <meta property="og:description" content="Mapa interactivo de riesgo por parroquia: sísmica, volcánica, hidrometeorológica">
+    <title>RiesgoECU | Blog de Gestión de Riesgos y Desastres</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .riesgo-app {
+            display: flex;
+            height: calc(100vh - 70px);
+            position: relative;
+        }
+        #map {
+            flex: 1;
+            min-height: 400px;
+            z-index: 1;
+        }
+        /* Panel lateral */
+        .panel-lateral {
+            width: 420px;
+            background: #0d1117;
+            border-left: 1px solid var(--color-border);
+            overflow-y: auto;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel-header {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--color-border);
+            background: #161b22;
+        }
+        .panel-header h2 {
+            color: var(--color-text-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            margin: 0 0 0.75rem 0;
+        }
+        .selector-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .selector-group select {
+            background: var(--color-bg-input);
+            color: var(--color-text-light);
+            border: 1px solid var(--color-border);
+            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: 'Open Sans', sans-serif;
+            width: 100%;
+        }
+        .selector-group select:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+        }
+        /* Info parroquia */
+        .panel-body {
+            flex: 1;
+            padding: 1rem 1.2rem;
+            overflow-y: auto;
+        }
+        .panel-placeholder {
+            color: var(--color-text-muted);
+            text-align: center;
+            padding: 3rem 1rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        .panel-placeholder svg {
+            display: block;
+            margin: 0 auto 1rem;
+            opacity: 0.4;
+        }
+        .info-section {
+            margin-bottom: 1.2rem;
+        }
+        .info-section-title {
+            color: var(--color-secondary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid rgba(27,153,139,0.2);
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.8rem;
+        }
+        .info-label {
+            color: var(--color-text-muted);
+        }
+        .info-value {
+            color: var(--color-text-light);
+            font-weight: 600;
+            text-align: right;
+            max-width: 55%;
+        }
+        .riesgo-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .riesgo-badge.muy-alto { background: rgba(220,38,38,0.2); color: #ef4444; }
+        .riesgo-badge.alto { background: rgba(249,115,22,0.2); color: #f97316; }
+        .riesgo-badge.medio { background: rgba(234,179,8,0.2); color: #eab308; }
+        .riesgo-badge.bajo { background: rgba(34,197,94,0.2); color: #22c55e; }
+        .riesgo-badge.muy-bajo { background: rgba(59,130,246,0.2); color: #3b82f6; }
+        .riesgo-gauge {
+            width: 100%;
+            height: 8px;
+            background: #1b2838;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        .riesgo-gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .parroquia-name {
+            color: var(--color-text-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 0.15rem 0;
+        }
+        .parroquia-loc {
+            color: var(--color-text-muted);
+            font-size: 0.78rem;
+            margin: 0 0 0.8rem 0;
+        }
+        .evento-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.75rem;
+        }
+        .evento-bar-label {
+            width: 110px;
+            color: var(--color-text-muted);
+            flex-shrink: 0;
+        }
+        .evento-bar-track {
+            flex: 1;
+            height: 6px;
+            background: #1b2838;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .evento-bar-fill {
+            height: 100%;
+            background: var(--color-secondary);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .evento-bar-count {
+            width: 30px;
+            text-align: right;
+            color: var(--color-text-light);
+            font-weight: 600;
+        }
+        .btn-pdf {
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--color-secondary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 0.5rem;
+        }
+        .btn-pdf:hover { background: #15877a; }
+        .btn-pdf:disabled { opacity: 0.4; cursor: not-allowed; }
+        /* Leyenda mapa */
+        .map-legend {
+            background: rgba(13,17,23,0.92);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            font-size: 0.75rem;
+            line-height: 1.8;
+            color: var(--color-text-muted);
+            backdrop-filter: blur(4px);
+        }
+        .map-legend h4 {
+            margin: 0 0 0.4rem 0;
+            color: var(--color-text-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+        }
+        .map-legend i {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        /* Loading */
+        .map-loading {
+            position: absolute;
+            top: 50%;
+            left: calc(50% - 210px);
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            color: var(--color-text-light);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            background: rgba(13,17,23,0.9);
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .load-status { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.5rem; }
+        /* Leaflet dark tiles override */
+        .leaflet-container { background: #0d1117; }
+        .leaflet-popup-content-wrapper {
+            background: #161b22;
+            color: var(--color-text-light);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+        .leaflet-popup-tip { background: #161b22; }
+        .leaflet-popup-content { font-family: 'Open Sans', sans-serif; font-size: 0.8rem; margin: 10px 14px; }
+        .leaflet-popup-content strong { color: var(--color-secondary); }
+        .leaflet-control-zoom a {
+            background: #161b22 !important;
+            color: var(--color-text-light) !important;
+            border-color: var(--color-border) !important;
+        }
+        .leaflet-control-zoom a:hover { background: #1b2838 !important; }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .riesgo-app { flex-direction: column-reverse; height: auto; }
+            .panel-lateral { width: 100%; max-height: 50vh; border-left: none; border-top: 1px solid var(--color-border); }
+            #map { height: 55vh; }
+            .map-loading { left: 50%; }
+        }
+    </style>
+</head>
+<body data-page="riesgoECU">
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Logo Riesgos y Desastres" class="logo-icon" style="height:55px;width:auto;display:block;" loading="eager">
+                <div class="logo-text">
+                    <span class="site-name">Riesgos y Desastres</span>
+                    <span class="site-tagline">Ciencia &middot; Territorio &middot; Prevención</span>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <button class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="articulos.html">Artículos</a></li>
+                    <li><a href="infografias.html">Infografías</a></li>
+                    <li><a href="videos.html">Videos</a></li>
+                    <li><a href="investigacion.html">Investigación</a></li>
+                    <li><a href="proyectos.html">Proyectos</a></li>
+                    <li><a href="riesgoECU.html" class="active">RiesgoECU</a></li>
+                    <li><a href="sobre-mi.html">Sobre Mí</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="riesgo-app">
+        <div id="map"></div>
+
+        <div class="map-loading" id="mapLoading">
+            <div class="spinner"></div>
+            <div>Cargando RiesgoECU...</div>
+            <div class="load-status" id="loadStatus">Conectando a Supabase</div>
+        </div>
+
+        <div class="panel-lateral">
+            <div class="panel-header">
+                <h2>RiesgoECU &mdash; Analizador Multiamenaza</h2>
+                <div class="selector-group">
+                    <select id="selProvincia"><option value="">-- Seleccionar provincia --</option></select>
+                    <select id="selCanton" disabled><option value="">-- Seleccionar cantón --</option></select>
+                    <select id="selParroquia" disabled><option value="">-- Seleccionar parroquia --</option></select>
+                </div>
+            </div>
+            <div class="panel-body" id="panelBody">
+                <div class="panel-placeholder" id="panelPlaceholder">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M32 4L58 18V46L32 60L6 46V18L32 4Z" stroke="#1B998B" stroke-width="1.5" fill="rgba(27,153,139,0.08)"/><circle cx="32" cy="32" r="8" stroke="#1B998B" stroke-width="1.2" fill="rgba(27,153,139,0.1)"/><path d="M32 24V40M24 32H40" stroke="#1B998B" stroke-width="1"/></svg>
+                    Haz clic en una parroquia del mapa<br>o selecciona desde los filtros<br>para ver el análisis de riesgo.
+                </div>
+                <div id="panelInfo" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ============================================================
+    // SUPABASE
+    // ============================================================
+    const SUPABASE_URL = 'https://vkqqveyaaijuwidpxyhq.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_P55pLxsilQ7Bx4oxagpGOg_WofWIrR1';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let map, geojsonLayer;
+    let allParroquias = [];    // {codigo, nombre, canton, provincia, geom_geojson}
+    let riesgoIndex = {};      // codigo -> {indice_amenaza, indice_exposicion, ...}
+    let poblacionIndex = {};   // codigo -> {poblacion_total, viviendas, nbi, ...}
+    let sismicaIndex = {};
+    let volcanicaIndex = {};
+    let hidroIndex = {};
+    let eventosIndex = {};     // codigo -> [{tipo, count}]
+    let selectedCodigo = null;
+
+    const COLORS = {
+        'MUY ALTO': '#dc2626',
+        'ALTO':     '#f97316',
+        'MEDIO':    '#eab308',
+        'BAJO':     '#22c55e',
+        'MUY BAJO': '#3b82f6',
+    };
+
+    function setStatus(msg) {
+        var el = document.getElementById('loadStatus');
+        if (el) el.textContent = msg;
+    }
+
+    // ============================================================
+    // INIT MAP
+    // ============================================================
+    map = L.map('map', {
+        center: [-1.5, -78.5],
+        zoom: 7,
+        zoomControl: true,
+        preferCanvas: true,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a> | RiesgoECU',
+        maxZoom: 18,
+    }).addTo(map);
+
+    // Legend
+    var legend = L.control({position: 'bottomleft'});
+    legend.onAdd = function() {
+        var div = L.DomUtil.create('div', 'map-legend');
+        div.innerHTML = '<h4>Nivel de Riesgo</h4>' +
+            '<div><i style="background:#dc2626"></i> Muy Alto (7-10)</div>' +
+            '<div><i style="background:#f97316"></i> Alto (5-7)</div>' +
+            '<div><i style="background:#eab308"></i> Medio (3-5)</div>' +
+            '<div><i style="background:#22c55e"></i> Bajo (1.5-3)</div>' +
+            '<div><i style="background:#3b82f6"></i> Muy Bajo (0-1.5)</div>';
+        return div;
+    };
+    legend.addTo(map);
+
+    // ============================================================
+    // LOAD DATA
+    // ============================================================
+    async function loadAll() {
+        try {
+            setStatus('Cargando parroquias y geometrías...');
+            await loadParroquias();
+
+            setStatus('Cargando índices de riesgo...');
+            await loadRiesgo();
+
+            setStatus('Cargando datos de población...');
+            await loadPoblacion();
+
+            setStatus('Cargando amenazas...');
+            await Promise.all([loadSismica(), loadVolcanica(), loadHidro()]);
+
+            setStatus('Cargando eventos históricos...');
+            await loadEventos();
+
+            setStatus('Renderizando mapa...');
+            renderMap();
+            populateSelectors();
+
+            document.getElementById('mapLoading').style.display = 'none';
+        } catch (err) {
+            console.error('Error cargando datos:', err);
+            setStatus('Error: ' + err.message);
+        }
+    }
+
+    async function fetchAll(table, columns) {
+        let all = [];
+        let from = 0;
+        const pageSize = 1000;
+        while (true) {
+            const { data, error } = await sb.from(table).select(columns).range(from, from + pageSize - 1);
+            if (error) throw new Error(table + ': ' + error.message);
+            if (!data || data.length === 0) break;
+            all = all.concat(data);
+            if (data.length < pageSize) break;
+            from += pageSize;
+        }
+        return all;
+    }
+
+    async function loadParroquias() {
+        // Get parroquias with geom as GeoJSON
+        const { data, error } = await sb.rpc('get_parroquias_geojson');
+        if (error || !data) {
+            // Fallback: load without geometry and use centroid
+            console.warn('RPC not available, loading parroquias without geom');
+            const rows = await fetchAll('parroquias', 'codigo_parroquia,nombre,canton,provincia');
+            allParroquias = rows.map(r => ({
+                codigo: r.codigo_parroquia,
+                nombre: r.nombre,
+                canton: r.canton,
+                provincia: r.provincia,
+                geojson: null,
+            }));
+            return;
+        }
+        allParroquias = data;
+    }
+
+    async function loadRiesgo() {
+        const rows = await fetchAll('indice_riesgo', '*');
+        rows.forEach(r => { riesgoIndex[r.codigo_parroquia] = r; });
+    }
+
+    async function loadPoblacion() {
+        const rows = await fetchAll('poblacion_inec', '*');
+        rows.forEach(r => { poblacionIndex[r.codigo_parroquia] = r; });
+    }
+
+    async function loadSismica() {
+        const rows = await fetchAll('amenaza_sismica', '*');
+        rows.forEach(r => { sismicaIndex[r.codigo_parroquia] = r; });
+    }
+
+    async function loadVolcanica() {
+        const rows = await fetchAll('amenaza_volcanica', '*');
+        rows.forEach(r => { volcanicaIndex[r.codigo_parroquia] = r; });
+    }
+
+    async function loadHidro() {
+        const rows = await fetchAll('amenaza_hidro', '*');
+        rows.forEach(r => { hidroIndex[r.codigo_parroquia] = r; });
+    }
+
+    async function loadEventos() {
+        // Aggregate: count by parroquia and type
+        const rows = await fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento');
+        var agg = {};
+        rows.forEach(r => {
+            var c = r.codigo_parroquia;
+            if (!agg[c]) agg[c] = {};
+            agg[c][r.tipo_evento] = (agg[c][r.tipo_evento] || 0) + 1;
+        });
+        Object.keys(agg).forEach(c => {
+            var types = Object.entries(agg[c]).sort((a,b) => b[1] - a[1]);
+            eventosIndex[c] = {
+                total: types.reduce((s, t) => s + t[1], 0),
+                types: types,
+            };
+        });
+    }
+
+    // ============================================================
+    // RENDER MAP
+    // ============================================================
+    function getColor(clasificacion) {
+        return COLORS[clasificacion] || '#555';
+    }
+
+    function renderMap() {
+        if (!allParroquias.length) return;
+
+        // Check if we have GeoJSON geometries
+        var hasGeom = allParroquias[0] && allParroquias[0].geojson;
+
+        if (hasGeom) {
+            renderGeoJSON();
+        } else {
+            renderMarkers();
+        }
+    }
+
+    function renderGeoJSON() {
+        var features = allParroquias.map(function(p) {
+            var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
+            var riesgo = riesgoIndex[p.codigo] || {};
+            return {
+                type: 'Feature',
+                properties: {
+                    codigo: p.codigo,
+                    nombre: p.nombre,
+                    canton: p.canton,
+                    provincia: p.provincia,
+                    clasificacion: riesgo.clasificacion || 'MEDIO',
+                    riesgo_total: riesgo.riesgo_total || 0,
+                },
+                geometry: geom,
+            };
+        }).filter(function(f) { return f.geometry; });
+
+        var fc = { type: 'FeatureCollection', features: features };
+
+        geojsonLayer = L.geoJSON(fc, {
+            style: function(feature) {
+                var clasif = feature.properties.clasificacion;
+                return {
+                    fillColor: getColor(clasif),
+                    fillOpacity: 0.55,
+                    color: '#0d1117',
+                    weight: 0.8,
+                    opacity: 0.8,
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function() { selectParroquia(feature.properties.codigo); });
+                layer.on('mouseover', function(e) {
+                    var p = feature.properties;
+                    layer.setStyle({ weight: 2.5, color: '#fff', fillOpacity: 0.75 });
+                    layer.bindTooltip('<strong>' + p.nombre + '</strong><br>Riesgo: ' + p.riesgo_total + ' [' + p.clasificacion + ']', {sticky: true}).openTooltip();
+                });
+                layer.on('mouseout', function() {
+                    geojsonLayer.resetStyle(layer);
+                    layer.closeTooltip();
+                });
+            },
+        }).addTo(map);
+
+        map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
+    }
+
+    function renderMarkers() {
+        // Fallback: render as circle markers at estimated positions
+        // Use a grid layout based on province
+        allParroquias.forEach(function(p, i) {
+            var riesgo = riesgoIndex[p.codigo] || {};
+            var clasif = riesgo.clasificacion || 'MEDIO';
+            // Estimate position from index
+            var lat = -1.5 + (i % 40) * 0.08;
+            var lng = -79 + Math.floor(i / 40) * 0.15;
+
+            L.circleMarker([lat, lng], {
+                radius: 5,
+                fillColor: getColor(clasif),
+                fillOpacity: 0.7,
+                color: '#0d1117',
+                weight: 1,
+            })
+            .bindTooltip('<strong>' + p.nombre + '</strong><br>' + clasif)
+            .on('click', function() { selectParroquia(p.codigo); })
+            .addTo(map);
+        });
+    }
+
+    // ============================================================
+    // SELECT PARROQUIA
+    // ============================================================
+    function selectParroquia(codigo) {
+        selectedCodigo = codigo;
+
+        // Find parroquia data
+        var p = allParroquias.find(function(x) { return x.codigo === codigo; });
+        if (!p) return;
+
+        var riesgo = riesgoIndex[codigo] || {};
+        var pob = poblacionIndex[codigo] || {};
+        var sis = sismicaIndex[codigo] || {};
+        var vol = volcanicaIndex[codigo] || {};
+        var hid = hidroIndex[codigo] || {};
+        var ev = eventosIndex[codigo] || { total: 0, types: [] };
+
+        var clasifClass = (riesgo.clasificacion || 'medio').toLowerCase().replace(' ', '-');
+        var riesgoVal = riesgo.riesgo_total || 0;
+        var gaugeWidth = Math.min(100, riesgoVal * 10);
+        var gaugeColor = getColor(riesgo.clasificacion || 'MEDIO');
+
+        // Event bars
+        var maxEv = ev.types.length ? ev.types[0][1] : 1;
+        var eventBarsHTML = '';
+        ev.types.slice(0, 6).forEach(function(t) {
+            var pct = Math.round((t[1] / maxEv) * 100);
+            eventBarsHTML += '<div class="evento-bar">' +
+                '<span class="evento-bar-label">' + t[0] + '</span>' +
+                '<div class="evento-bar-track"><div class="evento-bar-fill" style="width:' + pct + '%"></div></div>' +
+                '<span class="evento-bar-count">' + t[1] + '</span></div>';
+        });
+
+        var html = '' +
+            '<p class="parroquia-name">' + esc(p.nombre) + '</p>' +
+            '<p class="parroquia-loc">' + esc(p.canton) + ', ' + esc(p.provincia) + '</p>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Nivel de Riesgo</div>' +
+                '<div class="info-row"><span class="info-label">Clasificación</span>' +
+                    '<span class="riesgo-badge ' + clasifClass + '">' + (riesgo.clasificacion || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Riesgo total</span><span class="info-value">' + riesgoVal + ' / 10</span></div>' +
+                '<div class="riesgo-gauge"><div class="riesgo-gauge-fill" style="width:' + gaugeWidth + '%;background:' + gaugeColor + '"></div></div>' +
+                '<div class="info-row"><span class="info-label">Amenaza</span><span class="info-value">' + (riesgo.indice_amenaza || 0) + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Exposición</span><span class="info-value">' + (riesgo.indice_exposicion || 0) + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Falta capacidad</span><span class="info-value">' + (riesgo.indice_capacidad || 0) + '</span></div>' +
+            '</div>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Eventos Históricos (' + ev.total + ')</div>' +
+                (eventBarsHTML || '<div class="info-row"><span class="info-label">Sin eventos registrados</span></div>') +
+            '</div>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Población (INEC 2022)</div>' +
+                '<div class="info-row"><span class="info-label">Población total</span><span class="info-value">' + fmt(pob.poblacion_total) + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Viviendas</span><span class="info-value">' + fmt(pob.viviendas) + '</span></div>' +
+                '<div class="info-row"><span class="info-label">NBI</span><span class="info-value">' + (pob.nbi_porcentaje || 'N/D') + '%</span></div>' +
+                '<div class="info-row"><span class="info-label">Densidad</span><span class="info-value">' + (pob.densidad_hab_km2 || 'N/D') + ' hab/km²</span></div>' +
+            '</div>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Amenaza Sísmica</div>' +
+                '<div class="info-row"><span class="info-label">Nivel</span><span class="info-value">' + (sis.nivel || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">PGA (475 años)</span><span class="info-value">' + (sis.pga_475 || 'N/D') + ' g</span></div>' +
+                '<div class="info-row"><span class="info-label">Fuente</span><span class="info-value">' + esc(sis.fuente || 'N/D') + '</span></div>' +
+            '</div>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Amenaza Volcánica</div>' +
+                '<div class="info-row"><span class="info-label">Nivel</span><span class="info-value">' + (vol.nivel || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Volcán referencia</span><span class="info-value">' + esc(vol.volcan_referencia || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Distancia</span><span class="info-value">' + (vol.distancia_km || 'N/D') + ' km</span></div>' +
+            '</div>' +
+
+            '<div class="info-section">' +
+                '<div class="info-section-title">Amenaza Hidrometeorológica</div>' +
+                '<div class="info-row"><span class="info-label">Inundación</span><span class="info-value">' + (hid.nivel_inundacion || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Deslizamiento</span><span class="info-value">' + (hid.nivel_deslizamiento || 'N/D') + '</span></div>' +
+                '<div class="info-row"><span class="info-label">Precipitación anual</span><span class="info-value">' + fmt(hid.precipitacion_anual_mm) + ' mm</span></div>' +
+            '</div>' +
+
+            '<button class="btn-pdf" onclick="generarPDF()" id="btnPdf">Generar Informe PDF</button>';
+
+        document.getElementById('panelPlaceholder').style.display = 'none';
+        document.getElementById('panelInfo').style.display = 'block';
+        document.getElementById('panelInfo').innerHTML = html;
+
+        // Highlight on map
+        if (geojsonLayer) {
+            geojsonLayer.eachLayer(function(layer) {
+                if (layer.feature.properties.codigo === codigo) {
+                    layer.setStyle({ weight: 3, color: '#fff', fillOpacity: 0.85 });
+                    map.fitBounds(layer.getBounds(), { padding: [80, 80], maxZoom: 12 });
+                } else {
+                    geojsonLayer.resetStyle(layer);
+                }
+            });
+        }
+
+        // Update selectors
+        if (p.provincia) document.getElementById('selProvincia').value = p.provincia;
+    }
+
+    // ============================================================
+    // SELECTORS
+    // ============================================================
+    function populateSelectors() {
+        var provincias = [...new Set(allParroquias.map(function(p) { return p.provincia; }))].sort();
+        var sel = document.getElementById('selProvincia');
+        sel.innerHTML = '<option value="">-- Todas las provincias --</option>';
+        provincias.forEach(function(prov) {
+            sel.innerHTML += '<option value="' + esc(prov) + '">' + esc(prov) + '</option>';
+        });
+
+        sel.addEventListener('change', function() {
+            var prov = this.value;
+            var selC = document.getElementById('selCanton');
+            var selP = document.getElementById('selParroquia');
+            selP.innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
+            selP.disabled = true;
+
+            if (!prov) {
+                selC.innerHTML = '<option value="">-- Seleccionar cantón --</option>';
+                selC.disabled = true;
+                if (geojsonLayer) map.fitBounds(geojsonLayer.getBounds());
+                return;
+            }
+
+            var cantones = [...new Set(allParroquias.filter(function(p) { return p.provincia === prov; }).map(function(p) { return p.canton; }))].sort();
+            selC.innerHTML = '<option value="">-- Todos los cantones --</option>';
+            cantones.forEach(function(c) { selC.innerHTML += '<option value="' + esc(c) + '">' + esc(c) + '</option>'; });
+            selC.disabled = false;
+
+            // Zoom to province
+            zoomToFilter(function(p) { return p.provincia === prov; });
+        });
+
+        document.getElementById('selCanton').addEventListener('change', function() {
+            var canton = this.value;
+            var prov = document.getElementById('selProvincia').value;
+            var selP = document.getElementById('selParroquia');
+
+            if (!canton) {
+                selP.innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
+                selP.disabled = true;
+                zoomToFilter(function(p) { return p.provincia === prov; });
+                return;
+            }
+
+            var parrs = allParroquias.filter(function(p) { return p.provincia === prov && p.canton === canton; }).sort(function(a,b) { return a.nombre.localeCompare(b.nombre); });
+            selP.innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
+            parrs.forEach(function(p) { selP.innerHTML += '<option value="' + p.codigo + '">' + esc(p.nombre) + '</option>'; });
+            selP.disabled = false;
+
+            zoomToFilter(function(p) { return p.provincia === prov && p.canton === canton; });
+        });
+
+        document.getElementById('selParroquia').addEventListener('change', function() {
+            if (this.value) selectParroquia(this.value);
+        });
+    }
+
+    function zoomToFilter(fn) {
+        if (!geojsonLayer) return;
+        var bounds = L.latLngBounds();
+        geojsonLayer.eachLayer(function(layer) {
+            var p = layer.feature.properties;
+            var match = fn({ provincia: p.provincia, canton: p.canton, codigo: p.codigo });
+            if (match) bounds.extend(layer.getBounds());
+        });
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
+    }
+
+    // ============================================================
+    // PDF REPORT
+    // ============================================================
+    function generarPDF() {
+        if (!selectedCodigo) return;
+        var p = allParroquias.find(function(x) { return x.codigo === selectedCodigo; });
+        var riesgo = riesgoIndex[selectedCodigo] || {};
+        var pob = poblacionIndex[selectedCodigo] || {};
+        var sis = sismicaIndex[selectedCodigo] || {};
+        var vol = volcanicaIndex[selectedCodigo] || {};
+        var hid = hidroIndex[selectedCodigo] || {};
+        var ev = eventosIndex[selectedCodigo] || { total: 0, types: [] };
+
+        var doc = new jspdf.jsPDF();
+        var y = 20;
+
+        doc.setFontSize(18);
+        doc.setTextColor(27, 153, 139);
+        doc.text('RiesgoECU - Informe de Riesgo', 20, y); y += 10;
+
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Generado: ' + new Date().toLocaleDateString('es-EC'), 20, y); y += 12;
+
+        doc.setFontSize(14);
+        doc.setTextColor(40, 40, 40);
+        doc.text(p.nombre, 20, y); y += 7;
+        doc.setFontSize(10);
+        doc.text(p.canton + ', ' + p.provincia, 20, y); y += 12;
+
+        // Riesgo
+        doc.setFontSize(12);
+        doc.setTextColor(27, 153, 139);
+        doc.text('NIVEL DE RIESGO', 20, y); y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Clasificacion: ' + (riesgo.clasificacion || 'N/D'), 25, y); y += 6;
+        doc.text('Riesgo total: ' + (riesgo.riesgo_total || 0) + ' / 10', 25, y); y += 6;
+        doc.text('Indice amenaza: ' + (riesgo.indice_amenaza || 0), 25, y); y += 6;
+        doc.text('Indice exposicion: ' + (riesgo.indice_exposicion || 0), 25, y); y += 6;
+        doc.text('Indice capacidad: ' + (riesgo.indice_capacidad || 0), 25, y); y += 10;
+
+        // Población
+        doc.setFontSize(12);
+        doc.setTextColor(27, 153, 139);
+        doc.text('POBLACION (INEC 2022)', 20, y); y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Poblacion total: ' + fmt(pob.poblacion_total), 25, y); y += 6;
+        doc.text('Viviendas: ' + fmt(pob.viviendas), 25, y); y += 6;
+        doc.text('NBI: ' + (pob.nbi_porcentaje || 'N/D') + '%', 25, y); y += 10;
+
+        // Amenazas
+        doc.setFontSize(12);
+        doc.setTextColor(27, 153, 139);
+        doc.text('AMENAZAS', 20, y); y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Sismica: ' + (sis.nivel || 'N/D') + ' (PGA: ' + (sis.pga_475 || 'N/D') + 'g)', 25, y); y += 6;
+        doc.text('Volcanica: ' + (vol.nivel || 'N/D') + ' - ' + (vol.volcan_referencia || 'N/A') + ' (' + (vol.distancia_km || 'N/D') + ' km)', 25, y); y += 6;
+        doc.text('Inundacion: ' + (hid.nivel_inundacion || 'N/D') + ' | Deslizamiento: ' + (hid.nivel_deslizamiento || 'N/D'), 25, y); y += 6;
+        doc.text('Precipitacion anual: ' + fmt(hid.precipitacion_anual_mm) + ' mm', 25, y); y += 10;
+
+        // Eventos
+        doc.setFontSize(12);
+        doc.setTextColor(27, 153, 139);
+        doc.text('EVENTOS HISTORICOS (' + ev.total + ')', 20, y); y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        ev.types.slice(0, 8).forEach(function(t) {
+            doc.text(t[0] + ': ' + t[1], 25, y); y += 5;
+        });
+
+        y += 10;
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('RiesgoECU - Blog de Gestion de Riesgos y Desastres | Victor Hugo Pinto Paez', 20, y);
+
+        doc.save('RiesgoECU_' + p.nombre.replace(/\s+/g, '_') + '.pdf');
+    }
+
+    // ============================================================
+    // UTILS
+    // ============================================================
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function fmt(n) { return n != null ? Number(n).toLocaleString('es-EC') : 'N/D'; }
+
+    // ============================================================
+    // BOOT
+    // ============================================================
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    loadAll();
+    </script>
+    <script src="js/app.js"></script>
+</body>
+</html>
