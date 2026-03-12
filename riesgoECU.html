@@ -23,80 +23,69 @@
         .panel-header h2 span{color:var(--color-secondary)}
         /* Search */
         .search-container{position:relative;margin-bottom:.6rem}
-        .search-input{width:100%;box-sizing:border-box;background:#0d1117;color:var(--color-text-light);border:1px solid var(--color-border);padding:.55rem .6rem .55rem 2.2rem;border-radius:6px;font-size:.82rem;font-family:'Open Sans',sans-serif}
-        .search-input:focus{outline:none;border-color:var(--color-secondary)}
+        .search-input{width:100%;padding:.5rem .5rem .5rem 2rem;background:#161b22;border:1px solid var(--color-border);color:var(--color-text-light);border-radius:6px;font-size:.82rem;font-family:'Open Sans',sans-serif;outline:none;transition:border-color .2s;box-sizing:border-box}
+        .search-input:focus{border-color:var(--color-secondary)}
         .search-input::placeholder{color:#555}
-        .search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:#555;pointer-events:none}
-        .search-clear{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#555;cursor:pointer;font-size:1.1rem;display:none;padding:0 .2rem;line-height:1}
-        .search-clear:hover{color:var(--color-text-light)}
-        .search-results{position:absolute;top:100%;left:0;right:0;background:#161b22;border:1px solid var(--color-border);border-top:none;border-radius:0 0 6px 6px;max-height:320px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-        .search-result-item{padding:.5rem .7rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;display:flex;justify-content:space-between;align-items:center}
-        .search-result-item:hover,.search-result-item.hl{background:rgba(27,153,139,.15)}
+        .search-icon{position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:#555;pointer-events:none}
+        .search-clear{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#666;font-size:1.1rem;cursor:pointer;display:none;padding:0 .2rem}
+        .search-results{position:absolute;top:100%;left:0;right:0;background:#161b22;border:1px solid var(--color-border);border-radius:0 0 6px 6px;max-height:260px;overflow-y:auto;display:none;z-index:20}
+        .search-result-item{display:flex;align-items:center;justify-content:space-between;padding:.5rem .7rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+        .search-result-item:hover,.search-result-item.hl{background:rgba(27,153,139,.1)}
         .search-result-info{flex:1;min-width:0}
-        .search-result-name{color:var(--color-text-light);font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .search-result-loc{color:#666;font-size:.68rem;margin-top:.1rem}
-        .search-result-badge{font-size:.6rem;font-weight:700;padding:.15rem .4rem;border-radius:8px;flex-shrink:0;margin-left:.5rem}
+        .search-result-name{color:var(--color-text-light);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .search-result-loc{color:#555;font-size:.7rem;margin-top:1px}
+        .search-result-badge{font-size:.6rem;padding:2px 6px;border-radius:3px;white-space:nowrap;margin-left:.5rem;font-weight:600}
         /* Selectors */
-        .selector-group{display:flex;flex-direction:column;gap:.4rem}
-        .selector-group select{background:#0d1117;color:var(--color-text-light);border:1px solid var(--color-border);padding:.45rem .6rem;border-radius:6px;font-size:.8rem;font-family:'Open Sans',sans-serif;width:100%}
-        .selector-group select:focus{outline:none;border-color:var(--color-secondary)}
-        /* Buttons */
-        .btn-group{display:flex;gap:.4rem;margin-top:.6rem;align-items:center}
-        .btn-reset{padding:.45rem .8rem;background:transparent;color:var(--color-secondary);border:1px solid var(--color-secondary);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .3s;text-align:center;white-space:nowrap}
-        .btn-reset:hover{background:var(--color-secondary);color:#fff}
-        /* Background loader */
-        .bg-loader{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:#555;margin-left:auto}
-        .bg-spin{width:13px;height:13px;border:2px solid #333;border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
-        .bg-done{color:var(--color-secondary);font-size:.75rem}
+        .selector-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem}
+        .selector-group select{width:100%;padding:.4rem .5rem;background:#161b22;border:1px solid var(--color-border);color:var(--color-text-light);border-radius:5px;font-size:.78rem;font-family:'Open Sans',sans-serif;outline:none;box-sizing:border-box}
+        .selector-group select:disabled{opacity:.4}
+        /* Buttons & loader */
+        .btn-group{display:flex;align-items:center;gap:.6rem}
+        .btn-reset{background:transparent;border:1px solid var(--color-secondary);color:var(--color-secondary);padding:.35rem .8rem;border-radius:5px;font-size:.75rem;cursor:pointer;white-space:nowrap;transition:background .2s}
+        .btn-reset:hover{background:rgba(27,153,139,.15)}
+        .bg-loader{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:#888}
+        .bg-spin{width:12px;height:12px;border:2px solid #333;border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite}
+        .bg-done{color:#22c55e;font-weight:bold}
+        @keyframes spin{to{transform:rotate(360deg)}}
         /* Panel body */
-        .panel-body{flex:1;padding:1rem 1.2rem;overflow-y:auto}
-        .panel-placeholder{color:#666;text-align:center;padding:3rem 1rem;font-size:.82rem;line-height:1.7}
-        .panel-placeholder svg{display:block;margin:0 auto 1rem;opacity:.35}
-        .panel-nodata{color:#888;text-align:center;padding:2rem 1rem;font-size:.82rem;background:rgba(85,85,85,.1);border-radius:8px;border:1px dashed #555;margin-top:1rem}
-        /* Info sections */
-        .info-section{margin-bottom:1.1rem}
-        .info-section-title{color:var(--color-secondary);font-family:'Montserrat',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.45rem;padding-bottom:.25rem;border-bottom:1px solid rgba(27,153,139,.2)}
-        .info-row{display:flex;justify-content:space-between;padding:.25rem 0;font-size:.78rem}
+        .panel-body{flex:1;overflow-y:auto;padding:1rem 1.2rem}
+        .panel-placeholder{text-align:center;padding:3rem 1rem;color:#555;font-size:.82rem;line-height:1.6}
+        .panel-placeholder svg{display:block;margin:0 auto 1rem}
+        .panel-nodata{text-align:center;padding:2rem 1rem;color:#666;font-size:.85rem}
+        .parroquia-name{color:var(--color-text-light);font-size:1.05rem;font-weight:700;margin:0 0 .15rem}
+        .parroquia-loc{color:#888;font-size:.78rem;margin:0 0 .8rem}
+        .info-section{margin-bottom:1rem;border-bottom:1px solid var(--color-border);padding-bottom:.8rem}
+        .info-section-title{color:var(--color-secondary);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem;font-weight:600}
+        .info-row{display:flex;justify-content:space-between;align-items:center;padding:.2rem 0;font-size:.78rem}
         .info-label{color:#888}
-        .info-value{color:var(--color-text-light);font-weight:600;text-align:right;max-width:55%}
-        .parroquia-name{color:var(--color-text-light);font-family:'Montserrat',sans-serif;font-size:1.05rem;font-weight:700;margin:0 0 .1rem 0}
-        .parroquia-loc{color:#888;font-size:.76rem;margin:0 0 .7rem 0}
-        /* Riesgo badge & gauge */
-        .riesgo-badge{display:inline-block;padding:.2rem .6rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-        .riesgo-badge.muy-alto{background:rgba(220,38,38,.2);color:#ef4444}
+        .info-value{color:var(--color-text-light);font-weight:600}
+        .riesgo-badge{padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700}
+        .riesgo-badge.muy-alto{background:rgba(220,38,38,.2);color:#dc2626}
         .riesgo-badge.alto{background:rgba(249,115,22,.2);color:#f97316}
         .riesgo-badge.medio{background:rgba(234,179,8,.2);color:#eab308}
         .riesgo-badge.bajo{background:rgba(34,197,94,.2);color:#22c55e}
         .riesgo-badge.muy-bajo{background:rgba(59,130,246,.2);color:#3b82f6}
-        .riesgo-gauge{width:100%;height:8px;background:#1b2838;border-radius:4px;margin:.4rem 0;overflow:hidden}
-        .riesgo-gauge-fill{height:100%;border-radius:4px;transition:width .5s ease}
+        .riesgo-gauge{height:6px;background:#1c2128;border-radius:3px;margin:.3rem 0 .5rem;overflow:hidden}
+        .riesgo-gauge-fill{height:100%;border-radius:3px;transition:width .4s}
         /* Event bars */
-        .evento-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem;font-size:.73rem}
-        .evento-bar-label{width:105px;color:#888;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .evento-bar-track{flex:1;height:5px;background:#1b2838;border-radius:3px;overflow:hidden}
-        .evento-bar-fill{height:100%;background:var(--color-secondary);border-radius:3px;transition:width .4s ease}
-        .evento-bar-count{width:28px;text-align:right;color:var(--color-text-light);font-weight:600}
-        /* PDF btn */
-        .btn-pdf{width:100%;padding:.65rem;background:var(--color-secondary);color:#fff;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:background .3s;margin-top:.5rem}
-        .btn-pdf:hover{background:#15877a}
-        .btn-pdf:disabled{opacity:.4;cursor:not-allowed}
+        .evento-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;font-size:.72rem}
+        .evento-bar-label{color:#888;width:90px;text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .evento-bar-track{flex:1;height:5px;background:#1c2128;border-radius:2px;overflow:hidden}
+        .evento-bar-fill{height:100%;background:var(--color-secondary);border-radius:2px}
+        .evento-bar-count{color:var(--color-text-light);width:20px;font-weight:600}
+        /* PDF */
+        .btn-pdf{width:100%;padding:.55rem;background:var(--color-secondary);color:#fff;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:.5rem;transition:opacity .2s}
+        .btn-pdf:hover{opacity:.85}
         /* Legend */
-        .map-legend{background:rgba(13,17,23,.92);padding:.7rem .9rem;border-radius:8px;border:1px solid var(--color-border);font-size:.72rem;line-height:1.9;color:#888;backdrop-filter:blur(4px)}
-        .map-legend h4{margin:0 0 .3rem 0;color:var(--color-text-light);font-family:'Montserrat',sans-serif;font-size:.72rem}
-        .map-legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:5px;vertical-align:middle}
-        /* Loading */
-        .map-loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;color:var(--color-text-light);font-family:'Montserrat',sans-serif;text-align:center;background:rgba(13,17,23,.95);padding:2rem 2.5rem;border-radius:12px;border:1px solid var(--color-border)}
-        .spinner{width:36px;height:36px;border:3px solid var(--color-border);border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .8rem}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .load-status{font-size:.78rem;color:#666;margin-top:.4rem}
+        .map-legend{background:#161b22;padding:8px 12px;border-radius:6px;border:1px solid var(--color-border);color:var(--color-text-light);font-size:.72rem;line-height:1.6}
+        .map-legend h4{margin:0 0 4px;font-size:.75rem;color:var(--color-secondary)}
+        .map-legend i{width:14px;height:14px;display:inline-block;margin-right:6px;border-radius:2px;vertical-align:middle}
+        /* Loading overlay */
+        .map-loading{position:absolute;inset:0;background:rgba(13,17,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;color:var(--color-text-light);gap:.7rem;font-size:.9rem}
+        .spinner{width:36px;height:36px;border:3px solid #333;border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite}
+        .load-status{color:#888;font-size:.75rem}
         /* Leaflet overrides */
-        .leaflet-container{background:#0d1117}
-        .leaflet-popup-content-wrapper{background:#161b22;color:var(--color-text-light);border-radius:8px;border:1px solid var(--color-border)}
-        .leaflet-popup-tip{background:#161b22}
-        .leaflet-popup-content{font-family:'Open Sans',sans-serif;font-size:.78rem;margin:8px 12px}
-        .leaflet-control-zoom a{background:#161b22!important;color:var(--color-text-light)!important;border-color:var(--color-border)!important}
-        .leaflet-control-zoom a:hover{background:#1b2838!important}
-        .leaflet-control-layers{background:#161b22!important;color:var(--color-text-light)!important;border:1px solid var(--color-border)!important;border-radius:8px!important;font-size:.78rem!important}
+        .leaflet-control-layers{background:#161b22!important;border:1px solid var(--color-border)!important;border-radius:6px!important;color:#888!important}
         .leaflet-control-layers label{color:#888!important}
         .leaflet-control-layers-separator{border-top-color:var(--color-border)!important}
         .leaflet-tooltip{background:#161b22;color:var(--color-text-light);border:1px solid var(--color-border);font-family:'Open Sans',sans-serif;font-size:.75rem;padding:4px 8px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
@@ -168,7 +157,7 @@
                     <select id="selParroquia" disabled><option value="">-- Seleccionar parroquia --</option></select>
                 </div>
 
-                <!-- Buttons + background loader -->
+                <!-- Buttons + status -->
                 <div class="btn-group">
                     <button class="btn-reset" id="btnReset" style="display:none">Ver Ecuador completo</button>
                     <div class="bg-loader" id="bgLoader" style="display:none">
@@ -202,15 +191,11 @@
     var COLOR_NEUTRAL = '#3a3f47';
 
     var allList = [];
-    var provinceGeoData = [];
-    var provinceRiskAvg = {};
     var riesgoIndex = {}, poblacionIndex = {}, sismicaIndex = {}, volcanicaIndex = {}, hidroIndex = {}, eventosIndex = {};
-    var provinceLayer = null;
-    var parroquiaLayers = {};
-    var loadedProvinces = {};
+    var parroquiaLayer = null;
+    var provinceLayer = null; // fallback only
     var selectedCodigo = null;
     var ecuadorBounds = null;
-    var allParroquiasLoaded = false;
 
     function setStatus(msg) { document.getElementById('loadStatus').textContent = msg; }
 
@@ -268,128 +253,126 @@
         return all;
     }
 
+    async function loadGeometryWithRetry(maxRetries) {
+        for (var attempt = 1; attempt <= maxRetries; attempt++) {
+            setStatus('Cargando 1052 parroquias (intento ' + attempt + '/' + maxRetries + ')...');
+            try {
+                var res = await sb.rpc('get_todas_parroquias_simple');
+                if (res.error) throw new Error(res.error.message);
+                if (res.data && res.data.length >= 1000) return res.data;
+                throw new Error('Solo ' + (res.data ? res.data.length : 0) + ' parroquias recibidas (esperadas >= 1000)');
+            } catch (err) {
+                console.error('Intento ' + attempt + ' fallido:', err.message);
+                if (attempt === maxRetries) throw err;
+                await new Promise(function(r) { setTimeout(r, 2000); });
+            }
+        }
+    }
+
+    async function loadTabularData() {
+        var results = await Promise.all([
+            fetchAll('indice_riesgo', '*'),
+            fetchAll('poblacion_inec', '*'),
+            fetchAll('amenaza_sismica', '*'),
+            fetchAll('amenaza_volcanica', '*'),
+            fetchAll('amenaza_hidro', '*'),
+            fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento')
+        ]);
+
+        results[0].forEach(function(x) { riesgoIndex[x.codigo_parroquia] = x; });
+        results[1].forEach(function(x) { poblacionIndex[x.codigo_parroquia] = x; });
+        results[2].forEach(function(x) { sismicaIndex[x.codigo_parroquia] = x; });
+        results[3].forEach(function(x) { volcanicaIndex[x.codigo_parroquia] = x; });
+        results[4].forEach(function(x) { hidroIndex[x.codigo_parroquia] = x; });
+
+        var evAgg = {};
+        results[5].forEach(function(r) {
+            if (!evAgg[r.codigo_parroquia]) evAgg[r.codigo_parroquia] = {};
+            evAgg[r.codigo_parroquia][r.tipo_evento] = (evAgg[r.codigo_parroquia][r.tipo_evento] || 0) + 1;
+        });
+        Object.keys(evAgg).forEach(function(c) {
+            var types = Object.entries(evAgg[c]).sort(function(a, b) { return b[1] - a[1]; });
+            eventosIndex[c] = { total: types.reduce(function(s, t) { return s + t[1]; }, 0), types: types };
+        });
+    }
+
     async function loadInitial() {
         try {
-            setStatus('Cargando lista de parroquias...');
-            var listRes = await sb.rpc('get_parroquias_lista');
-            if (listRes.error) throw new Error('Lista: ' + listRes.error.message);
-            allList = listRes.data || [];
+            setStatus('Cargando datos...');
 
-            // Province avg risk
-            var agg = {};
-            allList.forEach(function(p) {
-                if (!agg[p.provincia]) agg[p.provincia] = { sum: 0, count: 0 };
-                if (p.riesgo_total != null) {
-                    agg[p.provincia].sum += parseFloat(p.riesgo_total);
-                    agg[p.provincia].count++;
+            // Fire geometry RPC (with retry) + tabular data in parallel
+            var geoPromise = loadGeometryWithRetry(3).catch(function(err) {
+                console.error('Geometry load failed after 3 retries:', err);
+                return null;
+            });
+            var tabPromise = loadTabularData();
+
+            var results = await Promise.all([geoPromise, tabPromise]);
+            var geoData = results[0];
+
+            if (geoData && geoData.length >= 1000) {
+                // SUCCESS: Build allList from geometry data & render
+                allList = geoData.map(function(p) {
+                    return { codigo: p.codigo, nombre: p.nombre, canton: p.canton, provincia: p.provincia, clasificacion: p.clasificacion, riesgo_total: p.riesgo_total };
+                });
+
+                setStatus('Renderizando ' + geoData.length + ' parroquias...');
+                renderParroquias(geoData);
+                populateSelectors();
+                initSearch();
+                document.getElementById('mapLoading').style.display = 'none';
+
+                // Show success count
+                var bgLoader = document.getElementById('bgLoader');
+                var bgSpin = document.getElementById('bgSpin');
+                var bgText = document.getElementById('bgLoaderText');
+                bgSpin.style.display = 'none';
+                bgText.innerHTML = '<span class="bg-done">&#10003;</span> ' + geoData.length + ' parroquias cargadas';
+                bgLoader.style.display = 'flex';
+                setTimeout(function() { bgLoader.style.display = 'none'; }, 4000);
+
+            } else {
+                // FALLBACK: Province outlines
+                console.warn('Geometry RPC failed or incomplete. Loading province fallback...');
+                setStatus('Cargando vista de provincias (respaldo)...');
+
+                var fallback = await Promise.all([
+                    sb.rpc('get_parroquias_lista'),
+                    sb.rpc('get_provincias_geojson')
+                ]);
+
+                if (!fallback[0].error && fallback[0].data) {
+                    allList = fallback[0].data;
                 }
-            });
-            Object.keys(agg).forEach(function(prov) {
-                provinceRiskAvg[prov] = agg[prov].count > 0 ? agg[prov].sum / agg[prov].count : 0;
-            });
+                if (!fallback[1].error && fallback[1].data) {
+                    renderProvinceFallback(fallback[1].data);
+                }
 
-            setStatus('Cargando mapa de provincias...');
-            var provRes = await sb.rpc('get_provincias_geojson');
-            if (provRes.error) throw new Error('Provincias: ' + provRes.error.message);
-            provinceGeoData = provRes.data || [];
+                populateSelectors();
+                initSearch();
+                document.getElementById('mapLoading').style.display = 'none';
 
-            setStatus('Cargando datos de riesgo...');
-            await Promise.all([
-                fetchAll('indice_riesgo', '*').then(function(r) { r.forEach(function(x) { riesgoIndex[x.codigo_parroquia] = x; }); }),
-                fetchAll('poblacion_inec', '*').then(function(r) { r.forEach(function(x) { poblacionIndex[x.codigo_parroquia] = x; }); }),
-                fetchAll('amenaza_sismica', '*').then(function(r) { r.forEach(function(x) { sismicaIndex[x.codigo_parroquia] = x; }); }),
-                fetchAll('amenaza_volcanica', '*').then(function(r) { r.forEach(function(x) { volcanicaIndex[x.codigo_parroquia] = x; }); }),
-                fetchAll('amenaza_hidro', '*').then(function(r) { r.forEach(function(x) { hidroIndex[x.codigo_parroquia] = x; }); })
-            ]);
-
-            setStatus('Cargando eventos historicos...');
-            var evRows = await fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento');
-            var evAgg = {};
-            evRows.forEach(function(r) {
-                if (!evAgg[r.codigo_parroquia]) evAgg[r.codigo_parroquia] = {};
-                evAgg[r.codigo_parroquia][r.tipo_evento] = (evAgg[r.codigo_parroquia][r.tipo_evento] || 0) + 1;
-            });
-            Object.keys(evAgg).forEach(function(c) {
-                var types = Object.entries(evAgg[c]).sort(function(a, b) { return b[1] - a[1]; });
-                eventosIndex[c] = { total: types.reduce(function(s, t) { return s + t[1]; }, 0), types: types };
-            });
-
-            // Render provinces immediately (uniform colored view)
-            setStatus('Renderizando mapa...');
-            renderProvinces();
-            populateSelectors();
-            initSearch();
-            document.getElementById('mapLoading').style.display = 'none';
-
-            // Then load ALL parroquias in background silently
-            loadAllBackground();
+                // Show error status
+                var bgLoader = document.getElementById('bgLoader');
+                var bgSpin = document.getElementById('bgSpin');
+                var bgText = document.getElementById('bgLoaderText');
+                bgSpin.style.display = 'none';
+                bgText.innerHTML = 'Error al cargar parroquias - vista simplificada';
+                bgText.style.color = '#dc2626';
+                bgLoader.style.display = 'flex';
+            }
 
         } catch (err) {
-            console.error(err);
+            console.error('Critical error:', err);
             setStatus('Error: ' + err.message);
         }
     }
 
     // ============================================================
-    // 4. RENDER PROVINCES (uniform initial view)
+    // 4. RENDER PARROQUIAS (single L.geoJSON layer)
     // ============================================================
-    function renderProvinces() {
-        if (provinceLayer) { map.removeLayer(provinceLayer); provinceLayer = null; }
-
-        var features = provinceGeoData.map(function(p) {
-            var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
-            return {
-                type: 'Feature',
-                properties: { provincia: p.provincia, count: p.parroquia_count, riskAvg: provinceRiskAvg[p.provincia] || 0 },
-                geometry: geom
-            };
-        }).filter(function(f) { return f.geometry; });
-
-        provinceLayer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
-            pane: 'provincePane',
-            style: function(f) {
-                return { fillColor: riskColor(f.properties.riskAvg), fillOpacity: 0.55, color: '#2a2f37', weight: 1, opacity: 0.7 };
-            },
-            onEachFeature: function(feature, layer) {
-                layer.on('click', function() {
-                    // Only respond if parroquias not yet loaded for this province
-                    if (!loadedProvinces[feature.properties.provincia]) {
-                        selectProvince(feature.properties.provincia);
-                    }
-                });
-                layer.on('mouseover', function() {
-                    if (loadedProvinces[feature.properties.provincia]) return;
-                    layer.setStyle({ weight: 2, color: '#aaa', fillOpacity: 0.7 });
-                    var avg = feature.properties.riskAvg;
-                    layer.bindTooltip(
-                        '<b>' + feature.properties.provincia + '</b><br>' +
-                        feature.properties.count + ' parroquias',
-                        { sticky: true, direction: 'top', offset: [0, -8] }
-                    ).openTooltip();
-                });
-                layer.on('mouseout', function() {
-                    if (loadedProvinces[feature.properties.provincia]) return;
-                    layer.setStyle({ fillColor: riskColor(feature.properties.riskAvg), fillOpacity: 0.55, weight: 1, color: '#2a2f37', opacity: 0.7 });
-                    layer.closeTooltip();
-                });
-            }
-        }).addTo(map);
-
-        ecuadorBounds = provinceLayer.getBounds();
-        map.fitBounds(ecuadorBounds, { padding: [20, 20] });
-    }
-
-    // ============================================================
-    // 5. LOAD PARROQUIAS
-    // ============================================================
-    async function loadProvinceParroquias(provinceName) {
-        if (loadedProvinces[provinceName]) return;
-
-        var res = await sb.rpc('get_parroquias_by_provincia', { p_provincia: provinceName });
-        if (res.error) { console.error(res.error); return; }
-        var data = res.data || [];
-
-        var features = data.map(function(p) {
+    function renderParroquias(geoData) {
+        var features = geoData.map(function(p) {
             var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
             return {
                 type: 'Feature',
@@ -398,7 +381,7 @@
             };
         }).filter(function(f) { return f.geometry; });
 
-        var layer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
+        parroquiaLayer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
             pane: 'parroquiaPane',
             style: function(f) { return parroquiaStyle(f.properties); },
             onEachFeature: function(feature, layer) {
@@ -421,55 +404,58 @@
             }
         }).addTo(map);
 
-        parroquiaLayers[provinceName] = layer;
-        loadedProvinces[provinceName] = true;
+        ecuadorBounds = parroquiaLayer.getBounds();
+        map.fitBounds(ecuadorBounds, { padding: [20, 20] });
     }
 
-    // Background load: all provinces in parallel, seamless swap
-    async function loadAllBackground() {
-        var bgLoader = document.getElementById('bgLoader');
-        var bgText = document.getElementById('bgLoaderText');
-        var bgSpin = document.getElementById('bgSpin');
-        bgLoader.style.display = 'flex';
-        bgText.textContent = 'Cargando parroquias...';
-
-        var provNames = [];
-        var provSet = {};
+    // ============================================================
+    // 5. PROVINCE FALLBACK (only if main RPC fails)
+    // ============================================================
+    function renderProvinceFallback(provData) {
+        var provRiskAvg = {};
+        var agg = {};
         allList.forEach(function(p) {
-            if (!provSet[p.provincia]) { provSet[p.provincia] = true; provNames.push(p.provincia); }
+            if (!agg[p.provincia]) agg[p.provincia] = { sum: 0, count: 0 };
+            if (p.riesgo_total != null) {
+                agg[p.provincia].sum += parseFloat(p.riesgo_total);
+                agg[p.provincia].count++;
+            }
+        });
+        Object.keys(agg).forEach(function(prov) {
+            provRiskAvg[prov] = agg[prov].count > 0 ? agg[prov].sum / agg[prov].count : 0;
         });
 
-        try {
-            // Fire all 26 province loads in parallel
-            await Promise.all(provNames.map(function(prov) {
-                return loadProvinceParroquias(prov).catch(function(err) {
-                    console.error('Error loading ' + prov + ':', err);
+        var features = provData.map(function(p) {
+            var geom = typeof p.geojson === 'string' ? JSON.parse(p.geojson) : p.geojson;
+            return {
+                type: 'Feature',
+                properties: { provincia: p.provincia, count: p.parroquia_count, riskAvg: provRiskAvg[p.provincia] || 0 },
+                geometry: geom
+            };
+        }).filter(function(f) { return f.geometry; });
+
+        provinceLayer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
+            pane: 'provincePane',
+            style: function(f) {
+                return { fillColor: riskColor(f.properties.riskAvg), fillOpacity: 0.55, color: '#2a2f37', weight: 1, opacity: 0.7 };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.on('mouseover', function() {
+                    layer.setStyle({ weight: 2, color: '#aaa', fillOpacity: 0.7 });
+                    layer.bindTooltip(
+                        '<b>' + feature.properties.provincia + '</b><br>' + feature.properties.count + ' parroquias',
+                        { sticky: true, direction: 'top', offset: [0, -8] }
+                    ).openTooltip();
                 });
-            }));
-
-            allParroquiasLoaded = true;
-
-            // Remove province layer - parroquias fully cover it
-            if (provinceLayer && map.hasLayer(provinceLayer)) {
-                map.removeLayer(provinceLayer);
+                layer.on('mouseout', function() {
+                    layer.setStyle({ fillColor: riskColor(feature.properties.riskAvg), fillOpacity: 0.55, weight: 1, color: '#2a2f37', opacity: 0.7 });
+                    layer.closeTooltip();
+                });
             }
+        }).addTo(map);
 
-            // Count total parroquias on map
-            var total = 0;
-            Object.keys(parroquiaLayers).forEach(function(k) {
-                parroquiaLayers[k].eachLayer(function() { total++; });
-            });
-
-            bgSpin.style.display = 'none';
-            bgText.innerHTML = '<span class="bg-done">&#10003;</span> ' + total + ' parroquias';
-            setTimeout(function() { bgLoader.style.display = 'none'; }, 3000);
-
-        } catch (err) {
-            console.error('Background load error:', err);
-            bgSpin.style.display = 'none';
-            bgText.textContent = 'Carga parcial';
-            setTimeout(function() { bgLoader.style.display = 'none'; }, 3000);
-        }
+        ecuadorBounds = provinceLayer.getBounds();
+        map.fitBounds(ecuadorBounds, { padding: [20, 20] });
     }
 
     // ============================================================
@@ -478,69 +464,43 @@
     function parroquiaStyle(props) {
         if (selectedCodigo) {
             if (props.codigo === selectedCodigo) {
-                // Selected: risk color + white border
                 var cl = props.clasificacion;
                 var color = cl ? (COLORS[cl] || COLOR_NODATA) : COLOR_NODATA;
                 return { fillColor: color, fillOpacity: 0.9, color: '#fff', weight: 3, opacity: 1 };
             }
-            // Not selected: gray semitransparent
             return { fillColor: COLOR_NEUTRAL, fillOpacity: 0.5, color: '#2a2f37', weight: 0.3, opacity: 0.3 };
         }
-        // No selection: risk colors
         var cl = props.clasificacion;
         var color = cl ? (COLORS[cl] || COLOR_NODATA) : COLOR_NODATA;
         return { fillColor: color, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3, opacity: 0.5 };
     }
 
     function refreshAllStyles() {
-        Object.keys(parroquiaLayers).forEach(function(prov) {
-            parroquiaLayers[prov].eachLayer(function(layer) {
-                var props = layer.feature.properties;
-                layer.setStyle(parroquiaStyle(props));
-                if (props.codigo === selectedCodigo) layer.bringToFront();
-            });
+        if (!parroquiaLayer) return;
+        parroquiaLayer.eachLayer(function(layer) {
+            var props = layer.feature.properties;
+            layer.setStyle(parroquiaStyle(props));
+            if (props.codigo === selectedCodigo) layer.bringToFront();
         });
-
-        // Also gray out province layer if still visible (during initial load)
-        if (provinceLayer && map.hasLayer(provinceLayer)) {
-            provinceLayer.eachLayer(function(layer) {
-                if (selectedCodigo) {
-                    layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.35, weight: 0.3, color: '#2a2f37', opacity: 0.3 });
-                } else {
-                    var c = riskColor(layer.feature.properties.riskAvg);
-                    layer.setStyle({ fillColor: c, fillOpacity: 0.55, weight: 1, color: '#2a2f37', opacity: 0.7 });
-                }
-            });
-        }
     }
 
     // ============================================================
     // 7. PARROQUIA SELECTION & PANEL
     // ============================================================
-    async function selectProvince(provinceName) {
+    function selectProvince(provinceName) {
         document.getElementById('selProvincia').value = provinceName;
         document.getElementById('btnReset').style.display = 'block';
-
-        if (!loadedProvinces[provinceName]) {
-            await loadProvinceParroquias(provinceName);
-        }
 
         updateCantonSelector(provinceName, null);
         document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
         document.getElementById('selParroquia').disabled = true;
 
-        if (parroquiaLayers[provinceName]) {
-            map.fitBounds(parroquiaLayers[provinceName].getBounds(), { padding: [40, 40] });
-        }
+        zoomToFilter(function(p) { return p.provincia === provinceName; });
     }
 
-    async function selectParroquia(codigo) {
+    function selectParroquia(codigo) {
         var p = allList.find(function(x) { return x.codigo === codigo; });
         if (!p) return;
-
-        if (!loadedProvinces[p.provincia]) {
-            await loadProvinceParroquias(p.provincia);
-        }
 
         selectedCodigo = codigo;
         document.getElementById('btnReset').style.display = 'block';
@@ -548,8 +508,8 @@
 
         // Zoom to parroquia
         var targetLayer = null;
-        if (parroquiaLayers[p.provincia]) {
-            parroquiaLayers[p.provincia].eachLayer(function(layer) {
+        if (parroquiaLayer) {
+            parroquiaLayer.eachLayer(function(layer) {
                 if (layer.feature.properties.codigo === codigo) targetLayer = layer;
             });
         }
@@ -763,7 +723,7 @@
             if (!canton) {
                 document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
                 document.getElementById('selParroquia').disabled = true;
-                if (prov && parroquiaLayers[prov]) map.fitBounds(parroquiaLayers[prov].getBounds(), { padding: [40, 40] });
+                if (prov) zoomToFilter(function(p) { return p.provincia === prov; });
                 return;
             }
             updateParroquiaSelector(prov, canton, null);
@@ -805,11 +765,11 @@
 
     function zoomToFilter(fn) {
         var bounds = L.latLngBounds();
-        Object.keys(parroquiaLayers).forEach(function(prov) {
-            parroquiaLayers[prov].eachLayer(function(layer) {
+        if (parroquiaLayer) {
+            parroquiaLayer.eachLayer(function(layer) {
                 if (fn(layer.feature.properties)) bounds.extend(layer.getBounds());
             });
-        });
+        }
         if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
     }
 
