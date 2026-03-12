@@ -1,0 +1,164 @@
+{
+  "fecha": "2026-03-11T22:23:47.292203",
+  "tablas": {
+    "parroquias": 1160,
+    "eventos_historicos": 5781,
+    "amenaza_sismica": 1160,
+    "amenaza_volcanica": 1160,
+    "amenaza_hidro": 1160,
+    "poblacion_inec": 1160,
+    "indice_riesgo": 1160
+  },
+  "integridad": {
+    "eventos_sin_parroquia": 0,
+    "parroquias_con_geometria": 1160,
+    "parroquias_total": 1160,
+    "cobertura_indice": "1160/1160"
+  },
+  "estadisticas": {
+    "provincias": 49,
+    "eventos_por_tipo": {
+      "INUNDACIÓN": {
+        "eventos": 1922,
+        "muertos": 5329,
+        "heridos": 19720,
+        "viviendas": 551139
+      },
+      "DESLIZAMIENTO": {
+        "eventos": 1173,
+        "muertos": 8822,
+        "heridos": 5841,
+        "viviendas": 30637
+      },
+      "SISMO": {
+        "eventos": 631,
+        "muertos": 19488,
+        "heridos": 83430,
+        "viviendas": 739978
+      },
+      "SEQUÍA": {
+        "eventos": 473,
+        "muertos": 0,
+        "heridos": 0,
+        "viviendas": 0
+      },
+      "INCENDIO FORESTAL": {
+        "eventos": 393,
+        "muertos": 375,
+        "heridos": 974,
+        "viviendas": 4023
+      },
+      "VENDAVAL": {
+        "eventos": 304,
+        "muertos": 167,
+        "heridos": 1529,
+        "viviendas": 15572
+      },
+      "HELADA": {
+        "eventos": 239,
+        "muertos": 0,
+        "heridos": 0,
+        "viviendas": 0
+      },
+      "ERUPCIÓN": {
+        "eventos": 189,
+        "muertos": 462,
+        "heridos": 2821,
+        "viviendas": 10505
+      },
+      "GRANIZADA": {
+        "eventos": 153,
+        "muertos": 0,
+        "heridos": 381,
+        "viviendas": 2345
+      },
+      "EPIDEMIA": {
+        "eventos": 126,
+        "muertos": 1364,
+        "heridos": 32035,
+        "viviendas": 0
+      },
+      "MAREJADA": {
+        "eventos": 118,
+        "muertos": 117,
+        "heridos": 292,
+        "viviendas": 2829
+      },
+      "TSUNAMI": {
+        "eventos": 60,
+        "muertos": 3876,
+        "heridos": 1963,
+        "viviendas": 24812
+      }
+    },
+    "riesgo_distribucion": {
+      "MUY ALTO": {
+        "parroquias": 203,
+        "promedio": 8.34,
+        "min": 7.0,
+        "max": 10.0
+      },
+      "ALTO": {
+        "parroquias": 400,
+        "promedio": 5.93,
+        "min": 5.0,
+        "max": 6.99
+      },
+      "MEDIO": {
+        "parroquias": 396,
+        "promedio": 4.01,
+        "min": 3.02,
+        "max": 4.98
+      },
+      "BAJO": {
+        "parroquias": 151,
+        "promedio": 2.4,
+        "min": 1.5,
+        "max": 2.99
+      },
+      "MUY BAJO": {
+        "parroquias": 10,
+        "promedio": 1.24,
+        "min": 0.95,
+        "max": 1.47
+      }
+    },
+    "top5_riesgo": [
+      {
+        "nombre": "Riobamba - Parroquia 3",
+        "provincia": "Chimborazo",
+        "riesgo": 10.0,
+        "clasificacion": "MUY ALTO"
+      },
+      {
+        "nombre": "Riobamba",
+        "provincia": "Chimborazo",
+        "riesgo": 10.0,
+        "clasificacion": "MUY ALTO"
+      },
+      {
+        "nombre": "Cuenca - Parroquia 2",
+        "provincia": "Azuay",
+        "riesgo": 10.0,
+        "clasificacion": "MUY ALTO"
+      },
+      {
+        "nombre": "Guaranda - Parroquia 3",
+        "provincia": "Bolívar",
+        "riesgo": 10.0,
+        "clasificacion": "MUY ALTO"
+      },
+      {
+        "nombre": "Riobamba - Parroquia 4",
+        "provincia": "Chimborazo",
+        "riesgo": 10.0,
+        "clasificacion": "MUY ALTO"
+      }
+    ],
+    "poblacion": {
+      "total": 42338215,
+      "viviendas": 10930796,
+      "nbi_promedio": 59.2
+    }
+  }
+}
