@@ -41,19 +41,13 @@
         .selector-group select{background:#0d1117;color:var(--color-text-light);border:1px solid var(--color-border);padding:.45rem .6rem;border-radius:6px;font-size:.8rem;font-family:'Open Sans',sans-serif;width:100%}
         .selector-group select:focus{outline:none;border-color:var(--color-secondary)}
         /* Buttons */
-        .btn-group{display:flex;gap:.4rem;margin-top:.6rem}
-        .btn-reset,.btn-all{flex:1;padding:.45rem .4rem;background:transparent;border:1px solid var(--color-secondary);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .3s;text-align:center}
-        .btn-reset{color:var(--color-secondary)}
+        .btn-group{display:flex;gap:.4rem;margin-top:.6rem;align-items:center}
+        .btn-reset{padding:.45rem .8rem;background:transparent;color:var(--color-secondary);border:1px solid var(--color-secondary);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .3s;text-align:center;white-space:nowrap}
         .btn-reset:hover{background:var(--color-secondary);color:#fff}
-        .btn-all{color:#888;border-color:#555}
-        .btn-all:hover{border-color:var(--color-secondary);color:var(--color-secondary)}
-        .btn-all:disabled{opacity:.4;cursor:not-allowed}
-        .btn-all.active{background:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}
-        /* Progress */
-        .progress-container{margin-top:.5rem;display:none}
-        .progress-text{font-size:.7rem;color:#666;margin-bottom:.25rem;display:flex;justify-content:space-between}
-        .progress-track{width:100%;height:5px;background:#1b2838;border-radius:3px;overflow:hidden}
-        .progress-fill{height:100%;background:var(--color-secondary);border-radius:3px;transition:width .3s;width:0%}
+        /* Background loader */
+        .bg-loader{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:#555;margin-left:auto}
+        .bg-spin{width:13px;height:13px;border:2px solid #333;border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+        .bg-done{color:var(--color-secondary);font-size:.75rem}
         /* Panel body */
         .panel-body{flex:1;padding:1rem 1.2rem;overflow-y:auto}
         .panel-placeholder{color:#666;text-align:center;padding:3rem 1rem;font-size:.82rem;line-height:1.7}
@@ -95,8 +89,6 @@
         .spinner{width:36px;height:36px;border:3px solid var(--color-border);border-top-color:var(--color-secondary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .8rem}
         @keyframes spin{to{transform:rotate(360deg)}}
         .load-status{font-size:.78rem;color:#666;margin-top:.4rem}
-        /* Map message */
-        .map-message{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:800;background:rgba(13,17,23,.92);color:var(--color-text-light);padding:.4rem .9rem;border-radius:6px;font-size:.75rem;border:1px solid var(--color-border);pointer-events:none;display:none;font-family:'Open Sans',sans-serif}
         /* Leaflet overrides */
         .leaflet-container{background:#0d1117}
         .leaflet-popup-content-wrapper{background:#161b22;color:var(--color-text-light);border-radius:8px;border:1px solid var(--color-border)}
@@ -149,9 +141,7 @@
     </header>
 
     <div class="riesgo-app">
-        <div id="map">
-            <div class="map-message" id="mapMessage"></div>
-        </div>
+        <div id="map"></div>
 
         <div class="map-loading" id="mapLoading">
             <div class="spinner"></div>
@@ -178,16 +168,13 @@
                     <select id="selParroquia" disabled><option value="">-- Seleccionar parroquia --</option></select>
                 </div>
 
-                <!-- Buttons -->
+                <!-- Buttons + background loader -->
                 <div class="btn-group">
                     <button class="btn-reset" id="btnReset" style="display:none">Ver Ecuador completo</button>
-                    <button class="btn-all" id="btnAll">Ver todas las parroquias</button>
-                </div>
-
-                <!-- Progress -->
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-text"><span id="progressText"></span><span id="progressPct">0%</span></div>
-                    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="bg-loader" id="bgLoader" style="display:none">
+                        <div class="bg-spin" id="bgSpin"></div>
+                        <span id="bgLoaderText">Cargando detalle...</span>
+                    </div>
                 </div>
             </div>
 
@@ -212,19 +199,18 @@
     var COLORS = { 'MUY ALTO':'#dc2626','ALTO':'#f97316','MEDIO':'#eab308','BAJO':'#22c55e','MUY BAJO':'#3b82f6' };
     var BADGE_BG = { 'MUY ALTO':'rgba(220,38,38,.2)','ALTO':'rgba(249,115,22,.2)','MEDIO':'rgba(234,179,8,.2)','BAJO':'rgba(34,197,94,.2)','MUY BAJO':'rgba(59,130,246,.2)' };
     var COLOR_NODATA = '#555555';
+    var COLOR_NEUTRAL = '#3a3f47';
 
-    // State
-    var allList = [];              // lightweight parroquia list (for search/selectors)
-    var provinceGeoData = [];      // province GeoJSON from cache
-    var provinceRiskAvg = {};      // { provinceName: avgRiesgo }
+    var allList = [];
+    var provinceGeoData = [];
+    var provinceRiskAvg = {};
     var riesgoIndex = {}, poblacionIndex = {}, sismicaIndex = {}, volcanicaIndex = {}, hidroIndex = {}, eventosIndex = {};
-    var provinceLayer = null;      // L.geoJSON of province outlines
-    var parroquiaLayers = {};      // { provinceName: L.geoJSON }
-    var loadedProvinces = {};      // { provinceName: true }
+    var provinceLayer = null;
+    var parroquiaLayers = {};
+    var loadedProvinces = {};
     var selectedCodigo = null;
     var ecuadorBounds = null;
     var allParroquiasLoaded = false;
-    var loadingAborted = false;
 
     function setStatus(msg) { document.getElementById('loadStatus').textContent = msg; }
 
@@ -233,7 +219,6 @@
     // ============================================================
     var map = L.map('map', { center: [-1.4, -80.5], zoom: 6, zoomControl: true, preferCanvas: true });
 
-    // Custom panes for layer ordering
     map.createPane('provincePane');
     map.getPane('provincePane').style.zIndex = 350;
     map.createPane('parroquiaPane');
@@ -245,7 +230,6 @@
     osmLayer.addTo(map);
     L.control.layers({ 'OpenStreetMap': osmLayer, 'Esri Topografico': topoLayer, 'Esri Satelital': satLayer }, null, { position: 'topright' }).addTo(map);
 
-    // Legend
     var legend = L.control({ position: 'bottomleft' });
     legend.onAdd = function () {
         var d = L.DomUtil.create('div', 'map-legend');
@@ -271,14 +255,6 @@
         return '#3b82f6';
     }
 
-    function riskClass(val) {
-        if (val >= 7) return 'MUY ALTO';
-        if (val >= 5) return 'ALTO';
-        if (val >= 3) return 'MEDIO';
-        if (val >= 1.5) return 'BAJO';
-        return 'MUY BAJO';
-    }
-
     async function fetchAll(table, columns) {
         var all = [], from = 0, ps = 1000;
         while (true) {
@@ -294,13 +270,12 @@
 
     async function loadInitial() {
         try {
-            // 1. Lightweight parroquia list (for search + selectors)
             setStatus('Cargando lista de parroquias...');
             var listRes = await sb.rpc('get_parroquias_lista');
             if (listRes.error) throw new Error('Lista: ' + listRes.error.message);
             allList = listRes.data || [];
 
-            // Compute province avg risk
+            // Province avg risk
             var agg = {};
             allList.forEach(function(p) {
                 if (!agg[p.provincia]) agg[p.provincia] = { sum: 0, count: 0 };
@@ -313,13 +288,11 @@
                 provinceRiskAvg[prov] = agg[prov].count > 0 ? agg[prov].sum / agg[prov].count : 0;
             });
 
-            // 2. Province outlines (cached, ~80KB)
             setStatus('Cargando mapa de provincias...');
             var provRes = await sb.rpc('get_provincias_geojson');
             if (provRes.error) throw new Error('Provincias: ' + provRes.error.message);
             provinceGeoData = provRes.data || [];
 
-            // 3. Tabular data in parallel
             setStatus('Cargando datos de riesgo...');
             await Promise.all([
                 fetchAll('indice_riesgo', '*').then(function(r) { r.forEach(function(x) { riesgoIndex[x.codigo_parroquia] = x; }); }),
@@ -329,7 +302,6 @@
                 fetchAll('amenaza_hidro', '*').then(function(r) { r.forEach(function(x) { hidroIndex[x.codigo_parroquia] = x; }); })
             ]);
 
-            // 4. Events
             setStatus('Cargando eventos historicos...');
             var evRows = await fetchAll('eventos_historicos', 'codigo_parroquia,tipo_evento');
             var evAgg = {};
@@ -342,12 +314,15 @@
                 eventosIndex[c] = { total: types.reduce(function(s, t) { return s + t[1]; }, 0), types: types };
             });
 
-            // 5. Render
+            // Render provinces immediately (uniform colored view)
             setStatus('Renderizando mapa...');
             renderProvinces();
             populateSelectors();
             initSearch();
             document.getElementById('mapLoading').style.display = 'none';
+
+            // Then load ALL parroquias in background silently
+            loadAllBackground();
 
         } catch (err) {
             console.error(err);
@@ -356,7 +331,7 @@
     }
 
     // ============================================================
-    // 4. RENDER PROVINCES
+    // 4. RENDER PROVINCES (uniform initial view)
     // ============================================================
     function renderProvinces() {
         if (provinceLayer) { map.removeLayer(provinceLayer); provinceLayer = null; }
@@ -373,30 +348,28 @@
         provinceLayer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
             pane: 'provincePane',
             style: function(f) {
-                var c = riskColor(f.properties.riskAvg);
-                return { fillColor: c, fillOpacity: 0.5, color: '#2a2f37', weight: 1, opacity: 0.7 };
+                return { fillColor: riskColor(f.properties.riskAvg), fillOpacity: 0.55, color: '#2a2f37', weight: 1, opacity: 0.7 };
             },
             onEachFeature: function(feature, layer) {
                 layer.on('click', function() {
+                    // Only respond if parroquias not yet loaded for this province
                     if (!loadedProvinces[feature.properties.provincia]) {
                         selectProvince(feature.properties.provincia);
                     }
                 });
                 layer.on('mouseover', function() {
                     if (loadedProvinces[feature.properties.provincia]) return;
-                    layer.setStyle({ weight: 2, color: '#aaa', fillOpacity: 0.65 });
+                    layer.setStyle({ weight: 2, color: '#aaa', fillOpacity: 0.7 });
                     var avg = feature.properties.riskAvg;
-                    var cl = riskClass(avg);
                     layer.bindTooltip(
                         '<b>' + feature.properties.provincia + '</b><br>' +
-                        feature.properties.count + ' parroquias | Riesgo prom: ' + avg.toFixed(1) + ' [' + cl + ']',
+                        feature.properties.count + ' parroquias',
                         { sticky: true, direction: 'top', offset: [0, -8] }
                     ).openTooltip();
                 });
                 layer.on('mouseout', function() {
                     if (loadedProvinces[feature.properties.provincia]) return;
-                    var c = riskColor(feature.properties.riskAvg);
-                    layer.setStyle({ fillColor: c, fillOpacity: 0.5, weight: 1, color: '#2a2f37', opacity: 0.7 });
+                    layer.setStyle({ fillColor: riskColor(feature.properties.riskAvg), fillOpacity: 0.55, weight: 1, color: '#2a2f37', opacity: 0.7 });
                     layer.closeTooltip();
                 });
             }
@@ -406,30 +379,11 @@
         map.fitBounds(ecuadorBounds, { padding: [20, 20] });
     }
 
-    function updateProvinceFill() {
-        if (!provinceLayer) return;
-        provinceLayer.eachLayer(function(layer) {
-            var prov = layer.feature.properties.provincia;
-            if (loadedProvinces[prov]) {
-                layer.setStyle({ fillOpacity: 0, weight: 1.2, color: '#444', opacity: 0.6 });
-            } else {
-                var c = riskColor(layer.feature.properties.riskAvg);
-                layer.setStyle({ fillColor: c, fillOpacity: 0.5, weight: 1, color: '#2a2f37', opacity: 0.7 });
-            }
-        });
-    }
-
     // ============================================================
     // 5. LOAD PARROQUIAS
     // ============================================================
     async function loadProvinceParroquias(provinceName) {
-        if (loadedProvinces[provinceName]) {
-            // Already cached - just ensure it's on the map
-            if (!map.hasLayer(parroquiaLayers[provinceName])) {
-                parroquiaLayers[provinceName].addTo(map);
-            }
-            return;
-        }
+        if (loadedProvinces[provinceName]) return;
 
         var res = await sb.rpc('get_parroquias_by_provincia', { p_provincia: provinceName });
         if (res.error) { console.error(res.error); return; }
@@ -446,12 +400,12 @@
 
         var layer = L.geoJSON({ type: 'FeatureCollection', features: features }, {
             pane: 'parroquiaPane',
-            style: function(f) { return parroquiaStyle(f.properties, false); },
+            style: function(f) { return parroquiaStyle(f.properties); },
             onEachFeature: function(feature, layer) {
                 layer.on('click', function() { selectParroquia(feature.properties.codigo); });
                 layer.on('mouseover', function() {
                     if (feature.properties.codigo !== selectedCodigo) {
-                        layer.setStyle({ weight: 1.5, color: '#aaa', fillOpacity: 0.7 });
+                        layer.setStyle({ weight: 1.5, color: '#888', fillOpacity: selectedCodigo ? 0.55 : 0.7 });
                     }
                     var r = feature.properties.riesgo_total;
                     var tip = '<b>' + feature.properties.nombre + '</b>';
@@ -460,7 +414,7 @@
                 });
                 layer.on('mouseout', function() {
                     if (feature.properties.codigo !== selectedCodigo) {
-                        layer.setStyle(parroquiaStyle(feature.properties, false));
+                        layer.setStyle(parroquiaStyle(feature.properties));
                     }
                     layer.closeTooltip();
                 });
@@ -469,35 +423,107 @@
 
         parroquiaLayers[provinceName] = layer;
         loadedProvinces[provinceName] = true;
-        updateProvinceFill();
     }
 
-    function parroquiaStyle(props, isSelected) {
+    // Background load: all provinces in parallel, seamless swap
+    async function loadAllBackground() {
+        var bgLoader = document.getElementById('bgLoader');
+        var bgText = document.getElementById('bgLoaderText');
+        var bgSpin = document.getElementById('bgSpin');
+        bgLoader.style.display = 'flex';
+        bgText.textContent = 'Cargando parroquias...';
+
+        var provNames = [];
+        var provSet = {};
+        allList.forEach(function(p) {
+            if (!provSet[p.provincia]) { provSet[p.provincia] = true; provNames.push(p.provincia); }
+        });
+
+        try {
+            // Fire all 26 province loads in parallel
+            await Promise.all(provNames.map(function(prov) {
+                return loadProvinceParroquias(prov).catch(function(err) {
+                    console.error('Error loading ' + prov + ':', err);
+                });
+            }));
+
+            allParroquiasLoaded = true;
+
+            // Remove province layer - parroquias fully cover it
+            if (provinceLayer && map.hasLayer(provinceLayer)) {
+                map.removeLayer(provinceLayer);
+            }
+
+            // Count total parroquias on map
+            var total = 0;
+            Object.keys(parroquiaLayers).forEach(function(k) {
+                parroquiaLayers[k].eachLayer(function() { total++; });
+            });
+
+            bgSpin.style.display = 'none';
+            bgText.innerHTML = '<span class="bg-done">&#10003;</span> ' + total + ' parroquias';
+            setTimeout(function() { bgLoader.style.display = 'none'; }, 3000);
+
+        } catch (err) {
+            console.error('Background load error:', err);
+            bgSpin.style.display = 'none';
+            bgText.textContent = 'Carga parcial';
+            setTimeout(function() { bgLoader.style.display = 'none'; }, 3000);
+        }
+    }
+
+    // ============================================================
+    // 6. STYLING
+    // ============================================================
+    function parroquiaStyle(props) {
+        if (selectedCodigo) {
+            if (props.codigo === selectedCodigo) {
+                // Selected: risk color + white border
+                var cl = props.clasificacion;
+                var color = cl ? (COLORS[cl] || COLOR_NODATA) : COLOR_NODATA;
+                return { fillColor: color, fillOpacity: 0.9, color: '#fff', weight: 3, opacity: 1 };
+            }
+            // Not selected: gray semitransparent
+            return { fillColor: COLOR_NEUTRAL, fillOpacity: 0.5, color: '#2a2f37', weight: 0.3, opacity: 0.3 };
+        }
+        // No selection: risk colors
         var cl = props.clasificacion;
         var color = cl ? (COLORS[cl] || COLOR_NODATA) : COLOR_NODATA;
-        if (isSelected) {
-            return { fillColor: color, fillOpacity: 0.85, color: '#fff', weight: 2.5, opacity: 1 };
-        }
         return { fillColor: color, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3, opacity: 0.5 };
     }
 
-    function refreshParroquiaStyles() {
+    function refreshAllStyles() {
         Object.keys(parroquiaLayers).forEach(function(prov) {
             parroquiaLayers[prov].eachLayer(function(layer) {
                 var props = layer.feature.properties;
-                layer.setStyle(parroquiaStyle(props, props.codigo === selectedCodigo));
+                layer.setStyle(parroquiaStyle(props));
                 if (props.codigo === selectedCodigo) layer.bringToFront();
             });
         });
+
+        // Also gray out province layer if still visible (during initial load)
+        if (provinceLayer && map.hasLayer(provinceLayer)) {
+            provinceLayer.eachLayer(function(layer) {
+                if (selectedCodigo) {
+                    layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.35, weight: 0.3, color: '#2a2f37', opacity: 0.3 });
+                } else {
+                    var c = riskColor(layer.feature.properties.riskAvg);
+                    layer.setStyle({ fillColor: c, fillOpacity: 0.55, weight: 1, color: '#2a2f37', opacity: 0.7 });
+                }
+            });
+        }
     }
 
+    // ============================================================
+    // 7. PARROQUIA SELECTION & PANEL
+    // ============================================================
     async function selectProvince(provinceName) {
-        showMapMsg('Cargando parroquias de ' + provinceName + '...');
         document.getElementById('selProvincia').value = provinceName;
         document.getElementById('btnReset').style.display = 'block';
 
-        await loadProvinceParroquias(provinceName);
-        showMapMsg('');
+        if (!loadedProvinces[provinceName]) {
+            await loadProvinceParroquias(provinceName);
+        }
 
         updateCantonSelector(provinceName, null);
         document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
@@ -508,83 +534,17 @@
         }
     }
 
-    async function loadAllParroquias() {
-        if (allParroquiasLoaded) {
-            // Re-show cached layers
-            Object.keys(parroquiaLayers).forEach(function(prov) {
-                if (!map.hasLayer(parroquiaLayers[prov])) parroquiaLayers[prov].addTo(map);
-            });
-            updateProvinceFill();
-            document.getElementById('btnAll').classList.add('active');
-            document.getElementById('btnReset').style.display = 'block';
-            return;
-        }
-
-        loadingAborted = false;
-        var provNames = [];
-        var provSet = {};
-        allList.forEach(function(p) {
-            if (!provSet[p.provincia]) { provSet[p.provincia] = true; provNames.push(p.provincia); }
-        });
-        provNames.sort();
-
-        var prog = document.getElementById('progressContainer');
-        var progText = document.getElementById('progressText');
-        var progPct = document.getElementById('progressPct');
-        var progFill = document.getElementById('progressFill');
-        var btnAll = document.getElementById('btnAll');
-
-        prog.style.display = 'block';
-        btnAll.disabled = true;
-        document.getElementById('btnReset').style.display = 'block';
-
-        var loaded = 0;
-        for (var i = 0; i < provNames.length; i++) {
-            if (loadingAborted) break;
-
-            var prov = provNames[i];
-            progText.textContent = prov + ' (' + (i + 1) + '/' + provNames.length + ')';
-            var pct = Math.round(((i + 1) / provNames.length) * 100);
-            progPct.textContent = pct + '%';
-            progFill.style.width = pct + '%';
-
-            await loadProvinceParroquias(prov);
-            loaded++;
-        }
-
-        if (!loadingAborted) {
-            allParroquiasLoaded = true;
-            btnAll.classList.add('active');
-            var totalP = Object.keys(parroquiaLayers).reduce(function(s, k) {
-                var n = 0; parroquiaLayers[k].eachLayer(function() { n++; }); return s + n;
-            }, 0);
-            progText.textContent = totalP + ' parroquias cargadas';
-            progPct.textContent = '100%';
-            progFill.style.width = '100%';
-            setTimeout(function() { prog.style.display = 'none'; }, 2500);
-        } else {
-            prog.style.display = 'none';
-        }
-        btnAll.disabled = false;
-    }
-
-    // ============================================================
-    // 6. PARROQUIA SELECTION & PANEL
-    // ============================================================
     async function selectParroquia(codigo) {
         var p = allList.find(function(x) { return x.codigo === codigo; });
         if (!p) return;
 
-        // Ensure province parroquias are loaded
         if (!loadedProvinces[p.provincia]) {
-            showMapMsg('Cargando parroquias de ' + p.provincia + '...');
             await loadProvinceParroquias(p.provincia);
-            showMapMsg('');
         }
 
         selectedCodigo = codigo;
         document.getElementById('btnReset').style.display = 'block';
-        refreshParroquiaStyles();
+        refreshAllStyles();
 
         // Zoom to parroquia
         var targetLayer = null;
@@ -678,7 +638,7 @@
     }
 
     // ============================================================
-    // 7. SEARCH AUTOCOMPLETE
+    // 8. SEARCH AUTOCOMPLETE
     // ============================================================
     function normalize(s) {
         return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -693,7 +653,6 @@
         input.addEventListener('input', function() {
             var q = normalize(this.value.trim());
             clearBtn.style.display = this.value ? 'block' : 'none';
-
             if (q.length < 2) { resultsDiv.style.display = 'none'; return; }
 
             var matches = [];
@@ -714,21 +673,19 @@
             }
 
             var html = '';
-            matches.forEach(function(m, idx) {
+            matches.forEach(function(m) {
                 var cl = m.clasificacion;
                 var badgeColor = cl ? (COLORS[cl] || '#555') : '#555';
                 var badgeBg = cl ? (BADGE_BG[cl] || 'rgba(85,85,85,.2)') : 'rgba(85,85,85,.2)';
-                html += '<div class="search-result-item" data-codigo="' + m.codigo + '" data-idx="' + idx + '">' +
+                html += '<div class="search-result-item" data-codigo="' + m.codigo + '">' +
                     '<div class="search-result-info"><div class="search-result-name">' + esc(m.nombre) + '</div>' +
                     '<div class="search-result-loc">' + esc(m.canton) + ', ' + esc(m.provincia) + '</div></div>' +
-                    '<span class="search-result-badge" style="background:' + badgeBg + ';color:' + badgeColor + '">' + (cl || '---') + '</span>' +
-                    '</div>';
+                    '<span class="search-result-badge" style="background:' + badgeBg + ';color:' + badgeColor + '">' + (cl || '---') + '</span></div>';
             });
             resultsDiv.innerHTML = html;
             resultsDiv.style.display = 'block';
             hlIndex = -1;
 
-            // Click handlers
             resultsDiv.querySelectorAll('.search-result-item').forEach(function(el) {
                 el.addEventListener('click', function() {
                     var codigo = this.getAttribute('data-codigo');
@@ -744,15 +701,16 @@
         input.addEventListener('keydown', function(e) {
             var items = resultsDiv.querySelectorAll('.search-result-item');
             if (!items.length || resultsDiv.style.display === 'none') return;
-
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 hlIndex = Math.min(hlIndex + 1, items.length - 1);
-                updateHL(items);
+                items.forEach(function(el, i) { el.classList.toggle('hl', i === hlIndex); });
+                if (items[hlIndex]) items[hlIndex].scrollIntoView({ block: 'nearest' });
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 hlIndex = Math.max(hlIndex - 1, 0);
-                updateHL(items);
+                items.forEach(function(el, i) { el.classList.toggle('hl', i === hlIndex); });
+                if (items[hlIndex]) items[hlIndex].scrollIntoView({ block: 'nearest' });
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 if (hlIndex >= 0 && items[hlIndex]) items[hlIndex].click();
@@ -762,13 +720,6 @@
             }
         });
 
-        function updateHL(items) {
-            items.forEach(function(el, i) {
-                el.classList.toggle('hl', i === hlIndex);
-            });
-            if (hlIndex >= 0 && items[hlIndex]) items[hlIndex].scrollIntoView({ block: 'nearest' });
-        }
-
         clearBtn.addEventListener('click', function() {
             input.value = '';
             clearBtn.style.display = 'none';
@@ -776,16 +727,13 @@
             input.focus();
         });
 
-        // Close results on outside click
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.search-container')) {
-                resultsDiv.style.display = 'none';
-            }
+            if (!e.target.closest('.search-container')) resultsDiv.style.display = 'none';
         });
     }
 
     // ============================================================
-    // 8. SELECTORS (cascade)
+    // 9. SELECTORS (cascade)
     // ============================================================
     function populateSelectors() {
         var provSet = {};
@@ -815,13 +763,10 @@
             if (!canton) {
                 document.getElementById('selParroquia').innerHTML = '<option value="">-- Seleccionar parroquia --</option>';
                 document.getElementById('selParroquia').disabled = true;
-                if (prov && parroquiaLayers[prov]) {
-                    map.fitBounds(parroquiaLayers[prov].getBounds(), { padding: [40, 40] });
-                }
+                if (prov && parroquiaLayers[prov]) map.fitBounds(parroquiaLayers[prov].getBounds(), { padding: [40, 40] });
                 return;
             }
             updateParroquiaSelector(prov, canton, null);
-            // Zoom to canton
             zoomToFilter(function(p) { return p.provincia === prov && p.canton === canton; });
         });
 
@@ -869,31 +814,13 @@
     }
 
     // ============================================================
-    // 9. RESET VIEW
+    // 10. RESET VIEW
     // ============================================================
     function resetView() {
-        loadingAborted = true;
         selectedCodigo = null;
+        refreshAllStyles();
 
-        // Remove parroquia layers from map (keep in cache)
-        Object.keys(parroquiaLayers).forEach(function(prov) {
-            if (map.hasLayer(parroquiaLayers[prov])) map.removeLayer(parroquiaLayers[prov]);
-        });
-        parroquiaLayers = {};
-        loadedProvinces = {};
-        allParroquiasLoaded = false;
-
-        // Reset province fill
-        updateProvinceFill();
-
-        // Show province layer
-        if (provinceLayer && !map.hasLayer(provinceLayer)) provinceLayer.addTo(map);
-
-        // Reset UI
         document.getElementById('btnReset').style.display = 'none';
-        document.getElementById('btnAll').classList.remove('active');
-        document.getElementById('btnAll').disabled = false;
-        document.getElementById('progressContainer').style.display = 'none';
         document.getElementById('panelPlaceholder').style.display = 'block';
         document.getElementById('panelInfo').style.display = 'none';
         document.getElementById('panelInfo').innerHTML = '';
@@ -910,7 +837,7 @@
     }
 
     // ============================================================
-    // 10. PDF GENERATION
+    // 11. PDF GENERATION
     // ============================================================
     function generarPDF() {
         if (!selectedCodigo) return;
@@ -971,21 +898,12 @@
     }
 
     // ============================================================
-    // 11. UTILS
+    // 12. UTILS & BOOT
     // ============================================================
     function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function fmt(n) { return n != null ? Number(n).toLocaleString('es-EC') : 'N/D'; }
-    function showMapMsg(msg) {
-        var el = document.getElementById('mapMessage');
-        el.textContent = msg;
-        el.style.display = msg ? 'block' : 'none';
-    }
 
-    // ============================================================
-    // 12. BUTTON HANDLERS & BOOT
-    // ============================================================
     document.getElementById('btnReset').addEventListener('click', resetView);
-    document.getElementById('btnAll').addEventListener('click', loadAllParroquias);
 
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
