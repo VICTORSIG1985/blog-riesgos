@@ -93,6 +93,8 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     gap: 0.75rem;
     text-decoration: none;
+    min-width: 230px;
+    flex-shrink: 0;
 }
 
 .logo-icon {
@@ -120,10 +122,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo-text .site-tagline {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--color-secondary);
     font-weight: 600;
     text-transform: uppercase;
+    white-space: nowrap;
     letter-spacing: 1px;
 }
 
