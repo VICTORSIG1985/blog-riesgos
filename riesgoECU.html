@@ -294,7 +294,7 @@
 
         geojsonLayer = L.geoJSON(fc, {
             style: function () {
-                return { fillColor: COLOR_NEUTRAL, fillOpacity: 0.5, color: '#1a1f26', weight: 0.6, opacity: 0.7 };
+                return { fillColor: COLOR_NEUTRAL, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3, opacity: 0.5 };
             },
             onEachFeature: function (feature, layer) {
                 layer.on('click', function () { selectParroquia(feature.properties.codigo); });
@@ -324,10 +324,10 @@
                 var color = props.clasificacion ? COLORS[props.clasificacion] || COLOR_NODATA : COLOR_NODATA;
                 layer.setStyle({ fillColor: color, fillOpacity: 0.85, color: '#fff', weight: 2.5 });
             } else {
-                layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.25, color: '#1a1f26', weight: 0.4 });
+                layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.2, color: '#2a2f37', weight: 0.2 });
             }
         } else {
-            layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.5, color: '#1a1f26', weight: 0.6 });
+            layer.setStyle({ fillColor: COLOR_NEUTRAL, fillOpacity: 0.6, color: '#2a2f37', weight: 0.3 });
         }
     }
 
