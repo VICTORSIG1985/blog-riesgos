@@ -1,0 +1,104 @@
+Crea un blog web científico y profesional con las siguientes 
+especificaciones exactas:
+
+## AUTOR
+- Nombre: Víctor Hugo Pinto Páez
+- Título: Gestor de Riesgos y Desastres | Especialista en 
+  Geoinformación
+- LinkedIn: https://www.linkedin.com/in/víctor-hugo-pinto-páez-701a71363
+- GitHub: https://github.com/VICTORSIG1985
+- ORCID: 0009-0001-5573-8294
+- Email: vpintopaez@hotmail.com
+- Foto: D:\blog-riesgos\YO.png
+
+## BIOGRAFÍA (usar textualmente en sección Sobre Mí)
+Víctor Hugo Pinto Páez es Licenciado en Gestión de Riesgos 
+y Desastres por la Universidad Técnica Particular de Loja 
+(UTPL) y cuenta con una Especialización en Gestión de 
+Geoinformación con mención en Proyectos de Ingeniería, 
+también por la UTPL. Actualmente cursa cuatro programas de 
+posgrado: Maestría en Prevención y Gestión de Riesgos con 
+mención en Variabilidad Climática y Resiliencia Territorial 
+(Universidad San Gregorio de Portoviejo), Maestría en 
+Teledetección y Sistemas de Información Geográfica 
+(Universidad Andina Simón Bolívar, Bolivia), Maestría en 
+Cambio Climático (Universidad Europea del Atlántico / UNINI 
+México) y Maestría en Educación con mención en Docencia e 
+Investigación en Educación Superior (Universidad Estatal de 
+Milagro).
+
+Sus líneas de investigación se centran en la modelación de 
+susceptibilidad a deslizamientos mediante aprendizaje 
+automático (Random Forest, XGBoost), el análisis 
+multitemporal de coberturas vegetales mediante índices 
+espectrales (Landsat, Sentinel-2), el modelamiento de 
+distribución de especies bajo escenarios climáticos CMIP6, 
+y la aplicación de sistemas de información geográfica a la 
+planificación territorial y la reducción del riesgo de 
+desastres. Maneja herramientas como ArcGIS, QGIS, Google 
+Earth Engine, Python y R.
+
+Cuenta con certificación en Estándares Esfera, Sistema de 
+Comando de Incidentes (SCI) y Comités de Operaciones de 
+Emergencia (COE).
+
+## IDENTIDAD VISUAL
+- Color primario: #0D1B2A (azul oscuro profundo)
+- Color secundario: #1B998B (verde teal)
+- Color acento: #E84855 (rojo alerta)
+- Color texto: #FFFFFF y #E0E0E0
+- Fuente títulos: Montserrat Bold (Google Fonts)
+- Fuente cuerpo: Open Sans (Google Fonts)
+- Logo: escudo con globo terráqueo y pin de ubicación con 
+  símbolo de alerta
+
+## ESTRUCTURA DE PÁGINAS
+1. HOME — artículos recientes + artículo destacado + 
+   infografía del día
+2. ARTÍCULOS — grid con buscador y filtros
+3. INFOGRAFÍAS — galería visual de:
+   D:\blog-riesgos\Infografías y videos\1.png
+   D:\blog-riesgos\Infografías y videos\2.png
+   D:\blog-riesgos\Infografías y videos\3.png
+   D:\blog-riesgos\Infografías y videos\4.png
+   D:\blog-riesgos\Infografías y videos\5.png
+   D:\blog-riesgos\Infografías y videos\6.png
+   D:\blog-riesgos\Infografías y videos\7.png
+   D:\blog-riesgos\Infografías y videos\08.png
+   D:\blog-riesgos\Infografías y videos\9.png
+4. VIDEOS — reproductor de:
+   D:\blog-riesgos\Infografías y videos\ (archivos MP4)
+5. SOBRE MÍ — biografía completa, formación académica, 
+   líneas de investigación, herramientas, certificaciones,
+   foto YO.png, badges de LinkedIn, GitHub y ORCID
+6. CONTACTO — formulario + íconos de redes sociales
+
+## FUNCIONALIDADES
+- Panel de administración para publicar artículos con:
+  título, resumen, contenido, imagen, etiquetas, fecha,
+  referencia bibliográfica en formato APA
+- Buscador con filtros por tema y fecha
+- Cada artículo muestra: fecha, fuente, versión del 
+  artículo (v1.0, v1.1)
+- Botón compartir directo en LinkedIn desde cada artículo
+- Enlace al repositorio GitHub
+- Badge ORCID clickeable: 0009-0001-5573-8294
+- RSS feed
+- Diseño responsive mobile-first
+
+## RIGOR ACADÉMICO
+- Campo de fuentes obligatorio en cada artículo
+- Fecha de publicación y última actualización visible
+- Sección de referencias con links a: IGEPN, INAMHI, 
+  SNGR, UNDRR, Marco de Sendai
+- Sin categorías por ahora — solo etiquetas libres
+
+## TECNOLOGÍA
+- HTML5 semántico
+- CSS3 con variables (sin frameworks)
+- JavaScript vanilla
+- localStorage para artículos
+- SEO optimizado con Open Graph para LinkedIn
+
+Crea todos los archivos necesarios. Empieza por 
+index.html y el panel de administración admin.html
